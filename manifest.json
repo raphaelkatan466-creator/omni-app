@@ -1,0 +1,16 @@
+{
+  "short_name": "OMNI-APP",
+  "name": "OMNI-APP - Cyberpunk Social",
+  "description": "L'application cyberpunk ultime avec mini-jeux, pizza clicker et modules sociaux.",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3502/3502685.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#0f172a",
+  "theme_color": "#38bdf8",
+  "display": "standalone"
+}
