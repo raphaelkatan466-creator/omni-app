@@ -10,13 +10,13 @@
 </head>
 <body>
 
-  <!-- Calques de fond & EFFET CRT -->
+  <!-- Calques de fond & Filtre CRT -->
   <div id="crt-overlay"></div>
   <div id="rave-background-layer"></div>
   <div id="rave-emoji-container"></div>
   <div id="matrix-canvas-container"><canvas id="matrix-canvas"></canvas></div>
 
-  <!-- Boutons Spéciaux Flottants -->
+  <!-- Boutons Spécial Flottants -->
   <div style="position: fixed; top: 15px; right: 15px; z-index: 100; display:flex; gap:8px;">
     <button id="crt-toggle-btn" class="music-btn" onclick="toggleCRTMode()">📺 Filtre CRT</button>
     <button id="rave-btn" onclick="toggleRaveMode()">🔴 Mode Rave : OFF</button>
@@ -24,7 +24,7 @@
 
   <div class="app-container">
     <header>
-      <h1 id="main-title" onclick="compterClicsTitre()">🚀 OMNI-APP ULTRA</h1>
+      <h1 id="main-title" onclick="compterClicsTitre()">🚀 OMNI-APP</h1>
       <p id="user-title-tag">Joueur Cyber — 👑 Débutant Cyber</p>
       <div id="happy-hour-banner" style="background: linear-gradient(90deg, #ef4444, #eab308); color: #0f172a; font-weight: bold; padding: 6px; border-radius: 8px; margin-top: 10px; display: none;">
         🔥 HAPPY HOUR PIZZA ACTIF ! Gains de clics x5 !
@@ -33,26 +33,26 @@
 
     <!-- Navigation principale étendue -->
     <nav class="main-menu">
-      <button id="btn-home" class="menu-btn active" onclick="switchTab('home')">🏠 Profil</button>
+      <button id="btn-home" class="menu-btn active" onclick="switchTab('home')">🏠 Accueil & Profil</button>
       <button id="btn-clicker" class="menu-btn" onclick="switchTab('clicker')">🎮 Pizza Clicker</button>
-      <button id="btn-arcade" class="menu-btn" onclick="switchTab('arcade')">🕹️ Arcade Hub</button>
+      <button id="btn-arcade" class="menu-btn" onclick="switchTab('arcade')">🕹️ Cyber Arcade Hub</button>
       <button id="btn-cards" class="menu-btn" onclick="switchTab('cards')">🎴 Cartes Rares</button>
       <button id="btn-tree" class="menu-btn" onclick="switchTab('tree')">🌳 Compétences</button>
-      <button id="btn-pets" class="menu-btn" onclick="switchTab('pets')">🐾 Familiers</button>
+      <button id="btn-pets" class="menu-btn" onclick="switchTab('pets')">🐾 Familiers Cyber</button>
       <button id="btn-sandbox" class="menu-btn" onclick="switchTab('sandbox')">🎨 Créatif & Chill</button>
       <button id="btn-community" class="menu-btn" onclick="switchTab('community')">🌐 Communauté</button>
-      <button id="btn-dare" class="menu-btn" onclick="switchTab('dare')">🎯 Défis</button>
+      <button id="btn-dare" class="menu-btn" onclick="switchTab('dare')">🎯 Feed Défis</button>
       <button id="btn-dilemme" class="menu-btn" onclick="switchTab('dilemme')">⚖️ Dilemmes</button>
       <button id="btn-vent" class="menu-btn" onclick="switchTab('vent')">🔥 Anti-Stress</button>
       <button id="btn-capsule" class="menu-btn" onclick="switchTab('capsule')">⏳ Capsule</button>
       <button id="btn-secrets" class="menu-btn" onclick="switchTab('secrets')">🏝️ Île Secrets</button>
       <button id="btn-achievements" class="menu-btn" onclick="switchTab('achievements')">🏆 100 Badges</button>
-      <button id="btn-shop" class="menu-btn" onclick="switchTab('shop')">🛍️ Cosmétiques</button>
-      <button id="btn-wheel" class="menu-btn" onclick="switchTab('wheel')">🎁 Roue OMNI</button>
+      <button id="btn-shop" class="menu-btn" onclick="switchTab('shop')">🛍️ Boutique Néon</button>
+      <button id="btn-wheel" class="menu-btn" onclick="switchTab('wheel')">🎁 Quêtes & Roue</button>
     </nav>
 
     <main class="content">
-      <!-- ACCUEIL & PROFIL -->
+      <!-- PAGE ACCUEIL & PROFIL -->
       <section id="page-home" class="page active">
         <div class="card" style="display:flex; align-items:center; gap:20px; background:rgba(15,23,42,0.9);">
           <div id="profile-avatar" style="font-size:50px; cursor:pointer;" onclick="changerAvatar()" title="Changer d'avatar">🤖</div>
@@ -82,12 +82,13 @@
           <ul id="leaderboard-list" style="list-style: none; padding: 0;"></ul>
         </div>
 
+        <!-- BOUTON DE RÉINITIALISATION PROPREMENT PLACÉ -->
         <div style="margin-top: 20px; text-align: center;">
           <button class="btn" style="background:#ef4444; color:white; width:100%; max-width:400px; padding:12px; font-weight:bold; border-radius:10px; cursor:pointer;" onclick="reinitialiserTout()">🗑️ Réinitialiser ma partie (Remise à zéro)</button>
         </div>
       </section>
 
-      <!-- PIZZA CLICKER EXTRÊME & PRESTIGE -->
+      <!-- PAGE PIZZA CLICKER EXTRÊME -->
       <section id="page-clicker" class="page">
         <h2>🎮 Pizza Clicker Extrême & Prestige</h2>
         <div class="card" style="text-align: center; position: relative; overflow: hidden; background: radial-gradient(circle, #2d3748 0%, #1a202c 100%);">
@@ -105,16 +106,16 @@
         <div id="shop-container" class="shop-grid"></div>
       </section>
 
-      <!-- CYBER ARCADE HUB (5 MINI-JEUX) -->
+      <!-- PAGE ARCADE HUB (7 MINI-JEUX) -->
       <section id="page-arcade" class="page">
-        <h2>🕹️ Cyber Arcade Hub (5 Mini-Jeux)</h2>
+        <h2>🕹️ Cyber Arcade Hub</h2>
         <div style="display:flex; gap:8px; margin-bottom:15px; justify-content:center; flex-wrap:wrap;">
-          <button class="music-btn" onclick="switchArcadeGame('snake')">🐍 Snake</button>
-          <button class="music-btn" onclick="switchArcadeGame('invaders')">👾 Space Invaders</button>
+          <button class="music-btn" onclick="switchArcadeGame('snake')">🐍 Cyber-Snake</button>
+          <button class="music-btn" onclick="switchArcadeGame('invaders')">👾 Invaders</button>
           <button class="music-btn" onclick="switchArcadeGame('flappy')">🍕 Flappy Pizza</button>
           <button class="music-btn" onclick="switchArcadeGame('breaker')">🧱 Brick Breaker</button>
           <button class="music-btn" onclick="switchArcadeGame('typer')">⌨️ Speed Typer</button>
-          <button class="music-btn" onclick="switchArcadeGame('memory')">🧠 Memory</button>
+          <button class="music-btn" onclick="switchArcadeGame('memory')">🧠 Memory Matrix</button>
           <button class="music-btn" onclick="switchArcadeGame('simon')">🔴 Simon Says</button>
           <button class="music-btn" style="border-color:#ef4444; color:#ef4444;" onclick="demarrerQTEHack()">⚡ Hack QTE</button>
         </div>
@@ -131,13 +132,13 @@
             <button id="simon-2" class="music-btn" style="height:80px; background:#22c55e;" onclick="cliquerSimon(2)"></button>
             <button id="simon-3" class="music-btn" style="height:80px; background:#eab308;" onclick="cliquerSimon(3)"></button>
           </div>
-          <canvas id="arcade-canvas" width="300" height="300" style="background:#090d16; border:2px solid var(--neon-blue); border-radius:12px;"></canvas>
+          <canvas id="arcade-canvas" width="300" height="300" style="background:#090d16; border:2px solid var(--neon-blue); border-radius:12px; box-shadow:0 0 20px rgba(56,189,248,0.3);"></canvas>
           <br>
           <button class="btn" id="arcade-start-btn" onclick="demarrerJeuArcadeActuel()" style="width:auto; margin-top:10px;">▶️ Lancer la partie</button>
         </div>
       </section>
 
-      <!-- CARTES RARES -->
+      <!-- PAGE CARTES RARES -->
       <section id="page-cards" class="page">
         <h2>🎴 Collection de Cartes Cyber</h2>
         <div class="card" style="text-align: center;">
@@ -149,19 +150,19 @@
         <div id="cards-gallery" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap:12px;"></div>
       </section>
 
-      <!-- ARBRE DE COMPÉTENCES GÉANT -->
+      <!-- PAGE ARBRE DE COMPÉTENCES -->
       <section id="page-tree" class="page">
         <h2>🌳 Arbre de Compétences Cyber</h2>
         <div id="skill-tree-container" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px;"></div>
       </section>
 
-      <!-- FAMILIERS CYBER -->
+      <!-- PAGE FAMILIERS CYBER -->
       <section id="page-pets" class="page">
         <h2>🐾 Familiers & Mascottes Cyber</h2>
         <div id="pets-container" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px;"></div>
       </section>
 
-      <!-- CREATIF, CHILL & SATISFAISANT -->
+      <!-- PAGE CREATIF & CHILL -->
       <section id="page-sandbox" class="page">
         <h2>🎨 Zone Créative & Chill</h2>
         
@@ -191,7 +192,7 @@
         </div>
       </section>
 
-      <!-- COMMUNAUTÉ & INTERACTION -->
+      <!-- PAGE COMMUNAUTÉ -->
       <section id="page-community" class="page">
         <h2>🌐 Espace Communautaire & Anonyme</h2>
         
@@ -226,7 +227,7 @@
         </div>
       </section>
 
-      <!-- DÉFIS COMMUNAUTAIRES -->
+      <!-- PAGE LIVE FEED DÉFIS -->
       <section id="page-dare" class="page">
         <h2>🎯 Mur de Défis Communautaire</h2>
         <div class="card">
@@ -238,7 +239,7 @@
         <div id="feed-container" style="margin-top:20px;"></div>
       </section>
 
-      <!-- TRIBUNAL DES DILEMMES -->
+      <!-- PAGE TRIBUNAL DES DILEMMES -->
       <section id="page-dilemme" class="page">
         <h2>⚖️ Le Tribunal des Dilemmes</h2>
         <div class="card dilemme-box">
@@ -254,7 +255,7 @@
         </div>
       </section>
 
-      <!-- DESTRUCTEUR DE SOUCIS -->
+      <!-- PAGE DESTRUCTEUR DE SOUCIS -->
       <section id="page-vent" class="page">
         <h2>🔥 Le Destructeur de Soucis</h2>
         <div class="card" style="text-align: center;">
@@ -263,7 +264,7 @@
         </div>
       </section>
 
-      <!-- CAPSULE TEMPORELLE -->
+      <!-- PAGE CAPSULE TEMPORELLE -->
       <section id="page-capsule" class="page">
         <h2>⏳ Capsule Temporelle</h2>
         <div class="card">
@@ -282,7 +283,7 @@
         <div id="capsules-list"></div>
       </section>
 
-      <!-- ÎLE AUX SECRETS -->
+      <!-- PAGE ÎLE AUX SECRETS -->
       <section id="page-secrets" class="page">
         <h2>🏝️ L'Île aux Secrets Anonymes</h2>
         <div class="card">
@@ -293,7 +294,7 @@
         <div id="secrets-list"></div>
       </section>
 
-      <!-- TROPHÉES ET SUCCÈS -->
+      <!-- PAGE TROPHÉES ET SUCCÈS -->
       <section id="page-achievements" class="page">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <h2>🏆 100 Badges & Titres</h2>
@@ -304,7 +305,7 @@
         <div id="achievements-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-top:15px;"></div>
       </section>
 
-      <!-- BOUTIQUE COSMÉTIQUE -->
+      <!-- PAGE BOUTIQUE COSMÉTIQUE NÉON -->
       <section id="page-shop" class="page">
         <h2>🛍️ Boutique Cosmétique Néon</h2>
         <p>Dépense tes Points OMNI ⭐ pour débloquer des skins, effets et thèmes exclusifs !</p>
@@ -319,7 +320,7 @@
         <div id="neon-themes-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:10px;"></div>
       </section>
 
-      <!-- QUÊTES & ROUE OMNI -->
+      <!-- PAGE QUÊTES & ROUE OMNI -->
       <section id="page-wheel" class="page">
         <h2>🎁 Quêtes Quotidiennes & Roue OMNI</h2>
         <div class="card" style="text-align:center;">
@@ -332,7 +333,7 @@
     </main>
   </div>
 
-  <!-- LECTEUR AUDIO STICKY ENRICHI AVEC MULTI-RADIOS -->
+  <!-- LECTEUR AUDIO STICKY AVEC VISUALISEUR ET RADIOS -->
   <div id="sticky-audio-bar">
     <div style="max-width: 800px; margin: 0 auto;">
       <canvas id="audio-visualizer-canvas" width="800" height="25" style="width:100%; height:25px; display:block; margin-bottom:5px;"></canvas>
