@@ -3,43 +3,56 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OMNI-APP - Cyberpunk Social</title>
+  <title>OMNI-APP - Cyberpunk Social Mega Edition</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
   <script src="script.js" defer></script>
-</head> <link rel="manifest" href="manifest.json">
+</head>
 <body>
 
-  <!-- Calques de fond (Rave, Emojis & Matrix) -->
+  <!-- Calques de fond & EFFET CRT -->
+  <div id="crt-overlay"></div>
   <div id="rave-background-layer"></div>
   <div id="rave-emoji-container"></div>
   <div id="matrix-canvas-container"><canvas id="matrix-canvas"></canvas></div>
 
-  <!-- Bouton Mode Rave Flottant -->
-  <button id="rave-btn" onclick="toggleRaveMode()">🔴 Mode Rave : OFF</button>
+  <!-- Boutons Spéciaux Flottants -->
+  <div style="position: fixed; top: 15px; right: 15px; z-index: 100; display:flex; gap:8px;">
+    <button id="crt-toggle-btn" class="music-btn" onclick="toggleCRTMode()">📺 Filtre CRT</button>
+    <button id="rave-btn" onclick="toggleRaveMode()">🔴 Mode Rave : OFF</button>
+  </div>
 
   <div class="app-container">
     <header>
-      <h1 id="main-title" onclick="compterClicsTitre()">🚀 OMNI-APP</h1>
+      <h1 id="main-title" onclick="compterClicsTitre()">🚀 OMNI-APP ULTRA</h1>
       <p id="user-title-tag">Joueur Cyber — 👑 Débutant Cyber</p>
+      <div id="happy-hour-banner" style="background: linear-gradient(90deg, #ef4444, #eab308); color: #0f172a; font-weight: bold; padding: 6px; border-radius: 8px; margin-top: 10px; display: none;">
+        🔥 HAPPY HOUR PIZZA ACTIF ! Gains de clics x5 !
+      </div>
     </header>
 
-    <!-- Navigation principale -->
+    <!-- Navigation principale étendue -->
     <nav class="main-menu">
-      <button id="btn-home" class="menu-btn active" onclick="switchTab('home')">🏠 Accueil & Profil</button>
-      <button id="btn-dare" class="menu-btn" onclick="switchTab('dare')">🎯 Feed Défis</button>
+      <button id="btn-home" class="menu-btn active" onclick="switchTab('home')">🏠 Profil</button>
+      <button id="btn-clicker" class="menu-btn" onclick="switchTab('clicker')">🎮 Pizza Clicker</button>
+      <button id="btn-arcade" class="menu-btn" onclick="switchTab('arcade')">🕹️ Arcade Hub</button>
+      <button id="btn-cards" class="menu-btn" onclick="switchTab('cards')">🎴 Cartes Rares</button>
+      <button id="btn-tree" class="menu-btn" onclick="switchTab('tree')">🌳 Compétences</button>
+      <button id="btn-pets" class="menu-btn" onclick="switchTab('pets')">🐾 Familiers</button>
+      <button id="btn-sandbox" class="menu-btn" onclick="switchTab('sandbox')">🎨 Créatif & Chill</button>
+      <button id="btn-community" class="menu-btn" onclick="switchTab('community')">🌐 Communauté</button>
+      <button id="btn-dare" class="menu-btn" onclick="switchTab('dare')">🎯 Défis</button>
       <button id="btn-dilemme" class="menu-btn" onclick="switchTab('dilemme')">⚖️ Dilemmes</button>
       <button id="btn-vent" class="menu-btn" onclick="switchTab('vent')">🔥 Anti-Stress</button>
-      <button id="btn-arcade" class="menu-btn" onclick="switchTab('arcade')">🕹️ Arcade Hub</button>
       <button id="btn-capsule" class="menu-btn" onclick="switchTab('capsule')">⏳ Capsule</button>
       <button id="btn-secrets" class="menu-btn" onclick="switchTab('secrets')">🏝️ Île Secrets</button>
-      <button id="btn-achievements" class="menu-btn" onclick="switchTab('achievements')">🏆 Succès & Titres</button>
-      <button id="btn-clicker" class="menu-btn" onclick="switchTab('clicker')">🎮 Pizza Clicker</button>
-      <button id="btn-shop" class="menu-btn" onclick="switchTab('shop')">🛍️ Boutique Néon</button>
-      <button id="btn-wheel" class="menu-btn" onclick="switchTab('wheel')">🎁 Quêtes & Roue</button>
+      <button id="btn-achievements" class="menu-btn" onclick="switchTab('achievements')">🏆 100 Badges</button>
+      <button id="btn-shop" class="menu-btn" onclick="switchTab('shop')">🛍️ Cosmétiques</button>
+      <button id="btn-wheel" class="menu-btn" onclick="switchTab('wheel')">🎁 Roue OMNI</button>
     </nav>
 
     <main class="content">
-      <!-- PAGE ACCUEIL & PROFIL -->
+      <!-- ACCUEIL & PROFIL -->
       <section id="page-home" class="page active">
         <div class="card" style="display:flex; align-items:center; gap:20px; background:rgba(15,23,42,0.9);">
           <div id="profile-avatar" style="font-size:50px; cursor:pointer;" onclick="changerAvatar()" title="Changer d'avatar">🤖</div>
@@ -58,6 +71,10 @@
             <h4 style="margin:0; color:#eab308;">⭐ Points OMNI</h4>
             <span id="omni-points-display" style="font-size:18px; font-weight:bold;">0 pts</span>
           </div>
+          <div>
+            <h4 style="margin:0; color:#a855f7;">✨ Pizzas Quantiques</h4>
+            <span id="quantique-display" style="font-size:18px; font-weight:bold;">0</span>
+          </div>
         </div>
 
         <div class="stat-card">
@@ -65,13 +82,151 @@
           <ul id="leaderboard-list" style="list-style: none; padding: 0;"></ul>
         </div>
 
-        <!-- BOUTON DE RÉINITIALISATION PROPREMENT PLACÉ ICI -->
         <div style="margin-top: 20px; text-align: center;">
           <button class="btn" style="background:#ef4444; color:white; width:100%; max-width:400px; padding:12px; font-weight:bold; border-radius:10px; cursor:pointer;" onclick="reinitialiserTout()">🗑️ Réinitialiser ma partie (Remise à zéro)</button>
         </div>
       </section>
 
-      <!-- PAGE LIVE FEED DÉFIS -->
+      <!-- PIZZA CLICKER EXTRÊME & PRESTIGE -->
+      <section id="page-clicker" class="page">
+        <h2>🎮 Pizza Clicker Extrême & Prestige</h2>
+        <div class="card" style="text-align: center; position: relative; overflow: hidden; background: radial-gradient(circle, #2d3748 0%, #1a202c 100%);">
+          <h3>💰 <span id="score-pieces">0</span> Pizzas</h3>
+          <p style="font-size: 14px; color: #a0aec0; margin-bottom: 15px;">⚡ +<span id="pieces-par-seconde">0</span>/sec | 💥 +<span id="click-power-display">1</span> par clic</p>
+          <div id="pizza-container" style="position: relative; display: inline-block; margin: 15px 0;">
+            <div id="pizza-rotation-wrapper">
+              <div id="pizza-gigante" onclick="cliquerPizza(event)">🍕</div>
+            </div>
+          </div>
+          <br>
+          <button class="btn" style="background: linear-gradient(90deg, #a855f7, #ec4899); color: white; width: auto; font-weight: bold; margin-top: 10px;" onclick="effectuerPrestige()">✨ Prestige Renaissance (Requis: 1M Pizzas)</button>
+        </div>
+        <h3>🛒 Améliorations de Production (22 Objets)</h3>
+        <div id="shop-container" class="shop-grid"></div>
+      </section>
+
+      <!-- CYBER ARCADE HUB (5 MINI-JEUX) -->
+      <section id="page-arcade" class="page">
+        <h2>🕹️ Cyber Arcade Hub (5 Mini-Jeux)</h2>
+        <div style="display:flex; gap:8px; margin-bottom:15px; justify-content:center; flex-wrap:wrap;">
+          <button class="music-btn" onclick="switchArcadeGame('snake')">🐍 Snake</button>
+          <button class="music-btn" onclick="switchArcadeGame('invaders')">👾 Space Invaders</button>
+          <button class="music-btn" onclick="switchArcadeGame('flappy')">🍕 Flappy Pizza</button>
+          <button class="music-btn" onclick="switchArcadeGame('breaker')">🧱 Brick Breaker</button>
+          <button class="music-btn" onclick="switchArcadeGame('typer')">⌨️ Speed Typer</button>
+          <button class="music-btn" onclick="switchArcadeGame('memory')">🧠 Memory</button>
+          <button class="music-btn" onclick="switchArcadeGame('simon')">🔴 Simon Says</button>
+          <button class="music-btn" style="border-color:#ef4444; color:#ef4444;" onclick="demarrerQTEHack()">⚡ Hack QTE</button>
+        </div>
+
+        <div class="card" style="text-align: center;">
+          <div id="qte-container" style="display:none; margin-bottom:15px; padding:12px; background:#ef4444; border-radius:10px; font-weight:bold;">
+            <span id="qte-prompt">TAPE VITE : SÉQUENCE</span>
+          </div>
+          <div id="typer-display" style="display:none; font-size:20px; font-weight:bold; color:#38bdf8; margin-bottom:10px;"></div>
+          <div id="memory-grid" style="display:none; grid-template-columns: repeat(4, 1fr); gap:10px; max-width:300px; margin:0 auto 15px auto;"></div>
+          <div id="simon-grid" style="display:none; grid-template-columns: repeat(2, 1fr); gap:10px; max-width:200px; margin:0 auto 15px auto;">
+            <button id="simon-0" class="music-btn" style="height:80px; background:#ef4444;" onclick="cliquerSimon(0)"></button>
+            <button id="simon-1" class="music-btn" style="height:80px; background:#38bdf8;" onclick="cliquerSimon(1)"></button>
+            <button id="simon-2" class="music-btn" style="height:80px; background:#22c55e;" onclick="cliquerSimon(2)"></button>
+            <button id="simon-3" class="music-btn" style="height:80px; background:#eab308;" onclick="cliquerSimon(3)"></button>
+          </div>
+          <canvas id="arcade-canvas" width="300" height="300" style="background:#090d16; border:2px solid var(--neon-blue); border-radius:12px;"></canvas>
+          <br>
+          <button class="btn" id="arcade-start-btn" onclick="demarrerJeuArcadeActuel()" style="width:auto; margin-top:10px;">▶️ Lancer la partie</button>
+        </div>
+      </section>
+
+      <!-- CARTES RARES -->
+      <section id="page-cards" class="page">
+        <h2>🎴 Collection de Cartes Cyber</h2>
+        <div class="card" style="text-align: center;">
+          <h3>🎁 Ouvre un Booster OMNI</h3>
+          <p>Prix du paquet : <strong style="color:#eab308;">100 Points OMNI ⭐</strong></p>
+          <button class="btn" style="background:#eab308; color:#0f172a; font-weight:bold;" onclick="ouvrirBooster()">✨ Ouvrir un Paquet !</button>
+        </div>
+        <h3>🖼️ Ta Galerie de Cartes</h3>
+        <div id="cards-gallery" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap:12px;"></div>
+      </section>
+
+      <!-- ARBRE DE COMPÉTENCES GÉANT -->
+      <section id="page-tree" class="page">
+        <h2>🌳 Arbre de Compétences Cyber</h2>
+        <div id="skill-tree-container" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px;"></div>
+      </section>
+
+      <!-- FAMILIERS CYBER -->
+      <section id="page-pets" class="page">
+        <h2>🐾 Familiers & Mascottes Cyber</h2>
+        <div id="pets-container" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px;"></div>
+      </section>
+
+      <!-- CREATIF, CHILL & SATISFAISANT -->
+      <section id="page-sandbox" class="page">
+        <h2>🎨 Zone Créative & Chill</h2>
+        
+        <div class="card">
+          <h3>💥 Papier Bulle Infini</h3>
+          <div id="bubble-wrap-container" style="display:grid; grid-template-columns: repeat(8, 1fr); gap:6px; max-width:320px; margin:0 auto;"></div>
+        </div>
+
+        <div class="card">
+          <h3>🖼️ Pixel Art Sandbox</h3>
+          <div id="pixel-grid" style="display:grid; grid-template-columns: repeat(10, 1fr); gap:2px; max-width:250px; margin:0 auto;"></div>
+        </div>
+
+        <div class="card" style="text-align:center;">
+          <h3>🔮 Générateur de Citations Rétro-Futuristes</h3>
+          <p id="citation-display" style="font-style:italic; color:#38bdf8;">"Clique ci-dessous pour inspirer ton esprit cyber..."</p>
+          <button class="btn" onclick="genererCitation()">🔮 Générer une citation</button>
+        </div>
+
+        <div class="card">
+          <h3>🔊 Boîte à Meuh Cyber</h3>
+          <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+            <button class="music-btn" onclick="jouerNote(150, 'sawtooth', 0.5, 0.1)">🔊 Laser</button>
+            <button class="music-btn" onclick="jouerNote(400, 'square', 0.3, 0.1)">💥 Explosion</button>
+            <button class="music-btn" onclick="jouerNote(800, 'sine', 0.6, 0.1)">✨ PowerUp</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- COMMUNAUTÉ & INTERACTION -->
+      <section id="page-community" class="page">
+        <h2>🌐 Espace Communautaire & Anonyme</h2>
+        
+        <div class="card">
+          <h3>📊 Météo d'Humeur Communautaire</h3>
+          <p>Comment te sens-tu aujourd'hui ?</p>
+          <div style="display:flex; gap:10px; justify-content:center;">
+            <button class="music-btn" onclick="voterHumeur('🔥 Super')">🔥 Super</button>
+            <button class="music-btn" onclick="voterHumeur('😎 Cool')">😎 Cool</button>
+            <button class="music-btn" onclick="voterHumeur('😴 Fatigué')">😴 Fatigué</button>
+          </div>
+          <div id="humeur-stats" style="margin-top:10px; font-weight:bold; color:#eab308; text-align:center;"></div>
+        </div>
+
+        <div class="card">
+          <h3>🎨 Mur de Graffiti Collectif (Toile 24h)</h3>
+          <canvas id="graffiti-canvas" width="280" height="150" style="background:#090d16; border:1px solid #334155; display:block; margin:0 auto; cursor:crosshair;"></canvas>
+          <p style="text-align:center; font-size:12px; color:#94a3b8;">Dessine directement sur la toile !</p>
+        </div>
+
+        <div class="card" style="text-align:center;">
+          <h3>⚡ Générateur de Pseudos Cyber</h3>
+          <p id="pseudo-generated" style="font-size:18px; font-weight:bold; color:#a855f7;">Néon_Vortex_99</p>
+          <button class="btn" onclick="genererPseudoCyber()">🎲 Générer un Pseudo</button>
+        </div>
+
+        <div class="card">
+          <h3>📬 Boîte aux Lettres Intergalactique</h3>
+          <textarea id="letter-input" placeholder="Écris une pensée bienveillante..."></textarea>
+          <button class="btn" onclick="envoyerLettre()">🚀 Envoyer dans le cosmos</button>
+          <div id="received-letter" style="margin-top:10px; font-style:italic; color:#4ade80;"></div>
+        </div>
+      </section>
+
+      <!-- DÉFIS COMMUNAUTAIRES -->
       <section id="page-dare" class="page">
         <h2>🎯 Mur de Défis Communautaire</h2>
         <div class="card">
@@ -83,7 +238,7 @@
         <div id="feed-container" style="margin-top:20px;"></div>
       </section>
 
-      <!-- PAGE TRIBUNAL DES DILEMMES -->
+      <!-- TRIBUNAL DES DILEMMES -->
       <section id="page-dilemme" class="page">
         <h2>⚖️ Le Tribunal des Dilemmes</h2>
         <div class="card dilemme-box">
@@ -99,7 +254,7 @@
         </div>
       </section>
 
-      <!-- PAGE DESTRUCTEUR DE SOUCIS -->
+      <!-- DESTRUCTEUR DE SOUCIS -->
       <section id="page-vent" class="page">
         <h2>🔥 Le Destructeur de Soucis</h2>
         <div class="card" style="text-align: center;">
@@ -108,26 +263,7 @@
         </div>
       </section>
 
-      <!-- PAGE ARCADE -->
-      <section id="page-arcade" class="page">
-        <h2>🕹️ Cyber Arcade Hub</h2>
-        <div style="display:flex; gap:10px; margin-bottom:15px; justify-content:center;">
-          <button class="music-btn" id="tab-btn-snake" onclick="switchArcadeGame('snake')">🐍 Cyber-Snake Réaliste</button>
-          <button class="music-btn" id="tab-btn-invaders" onclick="switchArcadeGame('invaders')">👾 Cyber-Invaders</button>
-          <button class="music-btn" style="border-color:#ef4444; color:#ef4444;" onclick="demarrerQTEHack()">⚡ Hack Serveur (QTE)</button>
-        </div>
-
-        <div class="card" style="text-align: center;">
-          <div id="qte-container" style="display:none; margin-bottom:15px; padding:12px; background:#ef4444; border-radius:10px; font-weight:bold;">
-            <span id="qte-prompt">TAPE VITE : SÉQUENCE</span>
-          </div>
-          <canvas id="arcade-canvas" width="300" height="300" style="background:#090d16; border:2px solid var(--neon-blue); border-radius:12px; box-shadow:0 0 20px rgba(56,189,248,0.3);"></canvas>
-          <br>
-          <button class="btn" id="arcade-start-btn" onclick="demarrerJeuArcadeActuel()" style="width:auto; margin-top:10px;">▶️ Lancer la partie</button>
-        </div>
-      </section>
-
-      <!-- PAGE CAPSULE TEMPORELLE -->
+      <!-- CAPSULE TEMPORELLE -->
       <section id="page-capsule" class="page">
         <h2>⏳ Capsule Temporelle</h2>
         <div class="card">
@@ -146,7 +282,7 @@
         <div id="capsules-list"></div>
       </section>
 
-      <!-- PAGE ÎLE AUX SECRETS -->
+      <!-- ÎLE AUX SECRETS -->
       <section id="page-secrets" class="page">
         <h2>🏝️ L'Île aux Secrets Anonymes</h2>
         <div class="card">
@@ -157,7 +293,7 @@
         <div id="secrets-list"></div>
       </section>
 
-      <!-- PAGE TROPHÉES ET SUCCÈS -->
+      <!-- TROPHÉES ET SUCCÈS -->
       <section id="page-achievements" class="page">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <h2>🏆 100 Badges & Titres</h2>
@@ -168,23 +304,7 @@
         <div id="achievements-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-top:15px;"></div>
       </section>
 
-      <!-- PAGE PIZZA CLICKER EXTRÊME -->
-      <section id="page-clicker" class="page">
-        <h2>🎮 Pizza Clicker Extrême</h2>
-        <div class="card" style="text-align: center; position: relative; overflow: hidden; background: radial-gradient(circle, #2d3748 0%, #1a202c 100%);">
-          <h3>💰 <span id="score-pieces">0</span> Pizzas</h3>
-          <p style="font-size: 14px; color: #a0aec0; margin-bottom: 15px;">⚡ +<span id="pieces-par-seconde">0</span>/sec  |  💥 +<span id="click-power-display">1</span> par clic</p>
-          <div id="pizza-container" style="position: relative; display: inline-block; margin: 15px 0;">
-            <div id="pizza-rotation-wrapper">
-              <div id="pizza-gigante" onclick="cliquerPizza(event)">🍕</div>
-            </div>
-          </div>
-        </div>
-        <h3>🛒 Améliorations de Production (22 Objets)</h3>
-        <div id="shop-container" class="shop-grid"></div>
-      </section>
-
-      <!-- PAGE BOUTIQUE COSMÉTIQUE NÉON -->
+      <!-- BOUTIQUE COSMÉTIQUE -->
       <section id="page-shop" class="page">
         <h2>🛍️ Boutique Cosmétique Néon</h2>
         <p>Dépense tes Points OMNI ⭐ pour débloquer des skins, effets et thèmes exclusifs !</p>
@@ -199,7 +319,7 @@
         <div id="neon-themes-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:10px;"></div>
       </section>
 
-      <!-- PAGE QUÊTES & ROUE OMNI -->
+      <!-- QUÊTES & ROUE OMNI -->
       <section id="page-wheel" class="page">
         <h2>🎁 Quêtes Quotidiennes & Roue OMNI</h2>
         <div class="card" style="text-align:center;">
@@ -212,13 +332,13 @@
     </main>
   </div>
 
-  <!-- LECTEUR AUDIO STICKY AVEC VISUALISEUR -->
+  <!-- LECTEUR AUDIO STICKY ENRICHI AVEC MULTI-RADIOS -->
   <div id="sticky-audio-bar">
     <div style="max-width: 800px; margin: 0 auto;">
       <canvas id="audio-visualizer-canvas" width="800" height="25" style="width:100%; height:25px; display:block; margin-bottom:5px;"></canvas>
-      <div style="display: flex; align-items: center; justify-content: space-between;">
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap:wrap; gap:8px;">
         <div style="text-align: left;">
-          <span style="font-size: 10px; color: #a855f7; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;">📻 Synthwave Radio Deluxe</span>
+          <span style="font-size: 10px; color: #a855f7; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;">📻 Cyber Radio Station</span>
           <p id="track-title" style="margin: 0; font-weight: bold; color: var(--neon-blue); font-size: 13px;">🎵 Track 1: Midnight Cyber Drive</p>
         </div>
         <div style="display: flex; gap: 8px; align-items:center;">
