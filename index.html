@@ -3,20 +3,198 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OMNI-APP - Cyberpunk Social Mega Edition</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="manifest" href="manifest.json">
-  <script src="script.js" defer></script>
+  <title>OMNI-APP - Mega Edition</title>
+  <style>
+    :root {
+      --neon-blue: #38bdf8;
+      --neon-pink: #ec4899;
+      --neon-purple: #a855f7;
+      --bg-dark: #0f172a;
+    }
+
+    body {
+      margin: 0; padding: 0;
+      background-color: var(--bg-dark);
+      color: white;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      overflow-x: hidden;
+      user-select: none;
+    }
+
+    #crt-overlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+      background-size: 100% 2px, 3px 100%;
+      pointer-events: none; z-index: 999; display: none;
+    }
+
+    #matrix-canvas-container {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      pointer-events: none; z-index: -1;
+    }
+
+    #matrix-canvas { width: 100vw; height: 100vh; display: block; }
+    body.matrix-mode { background-color: #000 !important; }
+
+    #rave-background-layer {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      pointer-events: none; z-index: -2; opacity: 0; transition: opacity 0.5s ease;
+    }
+
+    body.rave-active #rave-background-layer {
+      opacity: 1; animation: raveRainbow 0.6s infinite alternate;
+    }
+
+    @keyframes raveRainbow {
+      0% { background: #ef4444; }
+      25% { background: #eab308; }
+      50% { background: #38bdf8; }
+      75% { background: #a855f7; }
+      100% { background: #22c55e; }
+    }
+
+    .rave-emoji {
+      position: fixed; font-size: 30px; pointer-events: none; z-index: 99;
+      animation: fallEmoji 2.5s linear forwards;
+    }
+
+    @keyframes fallEmoji {
+      0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(105vh) rotate(360deg); opacity: 0; }
+    }
+
+    .app-container {
+      max-width: 900px; margin: 0 auto; padding: 20px; padding-bottom: 100px;
+    }
+
+    header { text-align: center; margin-bottom: 20px; }
+
+    /* TITRE AGRANDI ET IMPOSSIBLE À SÉLECTIONNER/COPIER */
+    header h1 {
+      font-size: 48px;
+      margin: 0;
+      color: var(--neon-blue);
+      cursor: pointer;
+      text-shadow: 0 0 15px var(--neon-blue);
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+    }
+
+    .main-menu {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; justify-content: center;
+    }
+
+    .menu-btn {
+      background: #1e293b; border: 1px solid var(--neon-blue); color: white;
+      padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: bold;
+      transition: all 0.2s ease;
+    }
+
+    .menu-btn:hover, .menu-btn.active {
+      background: var(--neon-blue); color: #0f172a; box-shadow: 0 0 10px var(--neon-blue);
+    }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    .card {
+      background: rgba(30, 41, 59, 0.85); border: 1px solid #334155;
+      border-radius: 12px; padding: 16px; margin-bottom: 15px; backdrop-filter: blur(8px);
+    }
+
+    #pizza-rotation-wrapper {
+      display: inline-block; animation: spinPizza 20s linear infinite;
+    }
+
+    @keyframes spinPizza {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    #pizza-gigante {
+      font-size: 110px; cursor: pointer; user-select: none;
+      transition: transform 0.08s ease; display: inline-block;
+    }
+
+    #pizza-gigante.clicked { transform: scale(0.85); }
+
+    .floating-text {
+      position: absolute; color: #eab308; font-weight: bold; font-size: 26px;
+      pointer-events: none; z-index: 10; animation: floatUp 0.6s ease-out forwards;
+    }
+
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-40px) scale(1.3); }
+    }
+
+    .pizza-sparkle {
+      position: absolute; width: 8px; height: 8px; border-radius: 50%;
+      pointer-events: none; z-index: 9; animation: sparkleAnim 0.5s ease-out forwards;
+    }
+
+    @keyframes sparkleAnim {
+      0% { opacity: 1; transform: translate(0, 0) scale(1); }
+      100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0); }
+    }
+
+    .shop-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px;
+    }
+
+    .shop-item {
+      background: #1e293b; border: 1px solid #334155; padding: 10px;
+      border-radius: 8px; display: flex; justify-content: space-between; align-items: center;
+    }
+
+    .shop-item.available { border-color: var(--neon-blue); }
+
+    /* PALETTE PIXEL ART ET GRILLE */
+    .color-swatch {
+      width: 28px; height: 28px; border-radius: 6px; cursor: pointer;
+      border: 2px solid transparent; transition: transform 0.1s;
+    }
+    .color-swatch.active { border-color: white; transform: scale(1.15); }
+
+    .bubble-item {
+      width: 32px; height: 32px; border-radius: 50%; background: #38bdf8;
+      border: 2px solid #0284c7; cursor: pointer; transition: transform 0.1s;
+      box-shadow: inset 0 -3px 6px rgba(0,0,0,0.3);
+    }
+    .bubble-item.popped {
+      background: #1e293b; border-color: #334155; transform: scale(0.85); box-shadow: none;
+    }
+
+    #sticky-audio-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; background: rgba(15, 23, 42, 0.95);
+      border-top: 1px solid var(--neon-purple); padding: 8px 15px; backdrop-filter: blur(10px); z-index: 900;
+    }
+
+    .music-btn {
+      background: #334155; border: 1px solid #475569; color: white;
+      padding: 5px 10px; border-radius: 6px; cursor: pointer;
+    }
+
+    .btn {
+      background: var(--neon-blue); color: #0f172a; border: none;
+      padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%;
+    }
+
+    textarea, input[type="text"] {
+      width: 100%; background: #0f172a; border: 1px solid #334155;
+      color: white; padding: 10px; border-radius: 8px; box-sizing: border-box;
+    }
+  </style>
 </head>
 <body>
 
-  <!-- Calques de fond & EFFET CRT & MATRIX & RAVE -->
   <div id="crt-overlay"></div>
   <div id="rave-background-layer"></div>
   <div id="rave-emoji-container"></div>
   <div id="matrix-canvas-container"><canvas id="matrix-canvas"></canvas></div>
 
-  <!-- Boutons Spéciaux Flottants -->
   <div style="position: fixed; top: 15px; right: 15px; z-index: 1000; display:flex; gap:8px;">
     <button id="crt-toggle-btn" class="music-btn" onclick="toggleCRTMode()">📺 Filtre CRT</button>
     <button id="rave-btn" class="music-btn" onclick="toggleRaveMode()">🔴 Mode Rave : OFF</button>
@@ -26,330 +204,343 @@
     <header>
       <h1 id="main-title" onclick="compterClicsTitre()">🚀 OMNI-APP</h1>
       <p id="user-title-tag">Joueur Cyber — 👑 Débutant Cyber</p>
-      <div id="happy-hour-banner" style="background: linear-gradient(90deg, #ef4444, #eab308); color: #0f172a; font-weight: bold; padding: 6px; border-radius: 8px; margin-top: 10px; display: none;">
-        🔥 HAPPY HOUR PIZZA ACTIF ! Gains de clics x5 !
-      </div>
     </header>
 
-    <!-- Navigation principale étendue -->
     <nav class="main-menu">
-      <button id="btn-home" class="menu-btn active" onclick="switchTab('home')">🏠 Accueil & Profil</button>
+      <button id="btn-home" class="menu-btn active" onclick="switchTab('home')">🏠 Profil</button>
       <button id="btn-clicker" class="menu-btn" onclick="switchTab('clicker')">🎮 Pizza Clicker</button>
-      <button id="btn-arcade" class="menu-btn" onclick="switchTab('arcade')">🕹️ Cyber Arcade Hub</button>
-      <button id="btn-cards" class="menu-btn" onclick="switchTab('cards')">🎴 Cartes Rares</button>
-      <button id="btn-tree" class="menu-btn" onclick="switchTab('tree')">🌳 Compétences</button>
-      <button id="btn-pets" class="menu-btn" onclick="switchTab('pets')">🐾 Familiers Cyber</button>
+      <button id="btn-pets" class="menu-btn" onclick="switchTab('pets')">🤖 Robot IA</button>
+      <button id="btn-arcade" class="menu-btn" onclick="switchTab('arcade')">🕹️ Arcade Hub</button>
       <button id="btn-sandbox" class="menu-btn" onclick="switchTab('sandbox')">🎨 Créatif & Chill</button>
-      <button id="btn-community" class="menu-btn" onclick="switchTab('community')">🌐 Communauté</button>
-      <button id="btn-dare" class="menu-btn" onclick="switchTab('dare')">🎯 Feed Défis</button>
       <button id="btn-dilemme" class="menu-btn" onclick="switchTab('dilemme')">⚖️ Dilemmes</button>
-      <button id="btn-vent" class="menu-btn" onclick="switchTab('vent')">🔥 Anti-Stress</button>
-      <button id="btn-capsule" class="menu-btn" onclick="switchTab('capsule')">⏳ Capsule</button>
-      <button id="btn-secrets" class="menu-btn" onclick="switchTab('secrets')">🏝️ Île Secrets</button>
-      <button id="btn-achievements" class="menu-btn" onclick="switchTab('achievements')">🏆 100 Badges</button>
-      <button id="btn-shop" class="menu-btn" onclick="switchTab('shop')">🛍️ Boutique Néon</button>
-      <button id="btn-wheel" class="menu-btn" onclick="switchTab('wheel')">🎁 Quêtes & Roue</button>
     </nav>
 
     <main class="content">
-      <!-- PAGE ACCUEIL & PROFIL -->
+      <!-- ACCUEIL -->
       <section id="page-home" class="page active">
-        <div class="card" style="display:flex; align-items:center; gap:20px; background:rgba(15,23,42,0.9);">
-          <div id="profile-avatar" style="font-size:50px; cursor:pointer;" onclick="changerAvatar()" title="Changer d'avatar">🤖</div>
+        <div class="card" style="display:flex; align-items:center; gap:20px;">
+          <div id="profile-avatar" style="font-size:50px; cursor:pointer;" onclick="changerAvatar()">🤖</div>
           <div style="flex-grow:1;">
-            <input type="text" id="username-input" value="Joueur Cyber" onchange="sauvegarderProfil()" style="font-size:18px; font-weight:bold; width: 100%; background:transparent; border:none; border-bottom:1px solid var(--neon-blue); color:white;">
-            <p id="profile-title-display" style="margin:5px 0 0 0; color:#eab308; font-weight:bold; font-size:13px;">👑 Titre : Débutant Cyber</p>
+            <input type="text" id="username-input" value="Joueur Cyber" onchange="sauvegarderProfil()">
+            <p id="profile-title-display" style="margin:5px 0 0 0; color:#eab308; font-weight:bold;">👑 Titre : Débutant Cyber</p>
           </div>
-        </div>
-
-        <div class="card" style="display:flex; justify-content:space-around; text-align:center;">
-          <div>
-            <h4 style="margin:0; color:#38bdf8;">⏱️ Temps de jeu</h4>
-            <span id="play-time-display" style="font-size:18px; font-weight:bold;">0s</span>
-          </div>
-          <div>
-            <h4 style="margin:0; color:#eab308;">⭐ Points OMNI</h4>
-            <span id="omni-points-display" style="font-size:18px; font-weight:bold;">0 pts</span>
-          </div>
-          <div>
-            <h4 style="margin:0; color:#a855f7;">✨ Pizzas Quantiques</h4>
-            <span id="quantique-display" style="font-size:18px; font-weight:bold;">0</span>
-          </div>
-        </div>
-
-        <div class="stat-card card">
-          <h3>🌍 Classement Mondial Cyber-Rank</h3>
-          <ul id="leaderboard-list" style="list-style: none; padding: 0;"></ul>
-        </div>
-
-        <div style="margin-top: 20px; text-align: center;">
-          <button class="btn" style="background:#ef4444; color:white; width:100%; max-width:400px; padding:12px; font-weight:bold; border-radius:10px; cursor:pointer;" onclick="reinitialiserTout()">🗑️ Réinitialiser ma partie (Remise à zéro)</button>
         </div>
       </section>
 
-      <!-- PAGE PIZZA CLICKER EXTRÊME -->
+      <!-- PIZZA CLICKER -->
       <section id="page-clicker" class="page">
-        <h2>🎮 Pizza Clicker Extrême & Prestige</h2>
-        <div class="card" style="text-align: center; position: relative; overflow: hidden; background: radial-gradient(circle, #2d3748 0%, #1a202c 100%); min-height: 280px;">
+        <div class="card" style="text-align: center;">
           <h3>💰 <span id="score-pieces">0</span> Pizzas</h3>
-          <p style="font-size: 14px; color: #a0aec0; margin-bottom: 15px;">⚡ +<span id="pieces-par-seconde">0</span>/sec | 💥 +<span id="click-power-display">1</span> par clic</p>
-          
-          <div id="pizza-container" style="position: relative; display: inline-block; margin: 15px 0; width: 150px; height: 150px;">
+          <div id="pizza-container" style="position: relative; display: inline-block; margin: 15px 0;">
             <div id="pizza-rotation-wrapper">
               <div id="pizza-gigante" onclick="cliquerPizza(event)">🍕</div>
             </div>
           </div>
-          <br>
-          <button class="btn" style="background: linear-gradient(90deg, #a855f7, #ec4899); color: white; width: auto; font-weight: bold; margin-top: 10px;" onclick="effectuerPrestige()">✨ Prestige Renaissance (Requis: 1M Pizzas)</button>
         </div>
-        <h3>🛒 Améliorations de Production (22 Objets)</h3>
-        <div id="shop-container" class="shop-grid"></div>
       </section>
 
-      <!-- PAGE ARCADE HUB -->
-      <section id="page-arcade" class="page">
-        <h2>🕹️ Cyber Arcade Hub</h2>
-        <div style="display:flex; gap:8px; margin-bottom:15px; justify-content:center; flex-wrap:wrap;">
-          <button class="music-btn" onclick="switchArcadeGame('snake')">🐍 Cyber-Snake</button>
-          <button class="music-btn" onclick="switchArcadeGame('invaders')">👾 Invaders</button>
-          <button class="music-btn" onclick="switchArcadeGame('flappy')">🍕 Flappy Pizza</button>
-          <button class="music-btn" onclick="switchArcadeGame('breaker')">🧱 Brick Breaker</button>
-          <button class="music-btn" onclick="switchArcadeGame('typer')">⌨️ Speed Typer</button>
-          <button class="music-btn" onclick="switchArcadeGame('memory')">🧠 Memory Matrix</button>
-          <button class="music-btn" onclick="switchArcadeGame('simon')">🔴 Simon Says</button>
-          <button class="music-btn" style="border-color:#ef4444; color:#ef4444;" onclick="demarrerQTEHack()">⚡ Hack QTE</button>
+      <!-- FAMILIER & ASSISTANT IA -->
+      <section id="page-pets" class="page">
+        <h2>🤖 Robot Cyber-Bot (Intelligence Artificielle)</h2>
+        <div class="card" style="display:flex; flex-direction:column; gap:12px;">
+          <div style="display:flex; align-items:center; gap:15px;">
+            <span style="font-size:50px;">🤖</span>
+            <div>
+              <h3 style="margin:0; color:var(--neon-blue);">Cyber-Bot Assistant</h3>
+              <p style="margin:0; font-size:13px; color:#94a3b8;">Pose-moi n'importe quelle question ou demande-moi des conseils !</p>
+            </div>
+          </div>
+          
+          <div id="ai-chat-box" style="height:200px; background:#0f172a; border:1px solid #334155; border-radius:8px; padding:10px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;">
+            <div style="background:#1e293b; padding:8px 12px; border-radius:8px; align-self:flex-start; max-width:80%;">
+              🤖 <strong>Cyber-Bot :</strong> Salut ! Je suis ton familier IA. Comment puis-je t'aider aujourd'hui ?
+            </div>
+          </div>
+
+          <div style="display:flex; gap:8px;">
+            <input type="text" id="ai-user-input" placeholder="Écris un message à ton familier..." onkeydown="if(e.key==='Enter') envoyerMessageIA()">
+            <button class="btn" style="width:auto;" onclick="envoyerMessageIA()">Envoyer</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- CREATIF & CHILL -->
+      <section id="page-sandbox" class="page">
+        <h2>🎨 Zone Créative & Chill</h2>
+        
+        <!-- PAPIER BULLE -->
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <h3 style="margin:0;">💥 Papier Bulle (Glisse ton doigt/souris)</h3>
+            <button class="music-btn" onclick="initPapierBulle()">🔄 Régénérer</button>
+          </div>
+          <div id="bubble-wrap-container" style="display:grid; grid-template-columns: repeat(10, 1fr); gap:6px; max-width:360px; margin:0 auto;" onmousedown="isSwipingBubble=true" onmouseup="isSwipingBubble=false" onmouseleave="isSwipingBubble=false" ontouchstart="isSwipingBubble=true" ontouchend="isSwipingBubble=false"></div>
         </div>
 
-        <div class="card" style="text-align: center;">
-          <div id="qte-container" style="display:none; margin-bottom:15px; padding:12px; background:#ef4444; border-radius:10px; font-weight:bold;">
-            <span id="qte-prompt">TAPE VITE : SÉQUENCE</span>
+        <!-- PIXEL ART PRO -->
+        <div class="card">
+          <h3 style="margin-top:0;">🖼️ Pixel Art Pro</h3>
+          <div style="display:flex; gap:15px; flex-wrap:wrap; justify-content:center;">
+            <div id="pixel-grid" style="display:grid; grid-template-columns: repeat(12, 1fr); gap:2px; background:#0f172a; padding:5px; border-radius:8px;" onmousedown="isDrawingPixel=true" onmouseup="isDrawingPixel=false" onmouseleave="isDrawingPixel=false"></div>
+            
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <span style="font-size:12px; font-weight:bold; color:#94a3b8;">Palette :</span>
+              <div id="palette-container" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:6px;"></div>
+            </div>
           </div>
-          <div id="typer-display" style="display:none; font-size:20px; font-weight:bold; color:#38bdf8; margin-bottom:10px;"></div>
-          <div id="memory-grid" style="display:none; grid-template-columns: repeat(4, 1fr); gap:10px; max-width:300px; margin:0 auto 15px auto;"></div>
-          <div id="simon-grid" style="display:none; grid-template-columns: repeat(2, 1fr); gap:10px; max-width:200px; margin:0 auto 15px auto;">
+        </div>
+
+        <!-- GENERATEUR DE CITATION IA -->
+        <div class="card" style="text-align:center;">
+          <h3>🔮 Générateur de Citations IA</h3>
+          <p id="citation-display" style="font-style:italic; color:#38bdf8; min-height:40px;">"Clique ci-dessous pour créer une pensée cybernétique infinie..."</p>
+          <button class="btn" onclick="genererCitationIA()">🔮 Générer avec l'IA</button>
+        </div>
+      </section>
+
+      <!-- DILEMMES & SIMON SAYS -->
+      <section id="page-arcade" class="page">
+        <div class="card" style="text-align: center;">
+          <h3 id="simon-status">🔴 Simon Says - Clique sur Jouer</h3>
+          <div id="simon-grid" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:10px; max-width:200px; margin:15px auto;">
             <button id="simon-0" class="music-btn" style="height:80px; background:#ef4444;" onclick="cliquerSimon(0)"></button>
             <button id="simon-1" class="music-btn" style="height:80px; background:#38bdf8;" onclick="cliquerSimon(1)"></button>
             <button id="simon-2" class="music-btn" style="height:80px; background:#22c55e;" onclick="cliquerSimon(2)"></button>
             <button id="simon-3" class="music-btn" style="height:80px; background:#eab308;" onclick="cliquerSimon(3)"></button>
           </div>
-          <canvas id="arcade-canvas" width="300" height="300" style="background:#090d16; border:2px solid var(--neon-blue); border-radius:12px; box-shadow:0 0 20px rgba(56,189,248,0.3);"></canvas>
-          <br>
-          <button class="btn" id="arcade-start-btn" onclick="demarrerJeuArcadeActuel()" style="width:auto; margin-top:10px;">▶️ Lancer la partie</button>
-        </div>
-      </section>
-
-      <!-- PAGE CARTES RARES -->
-      <section id="page-cards" class="page">
-        <h2>🎴 Collection de Cartes Cyber</h2>
-        <div class="card" style="text-align: center;">
-          <h3>🎁 Ouvre un Booster OMNI</h3>
-          <p>Prix du paquet : <strong style="color:#eab308;">100 Points OMNI ⭐</strong></p>
-          <button class="btn" style="background:#eab308; color:#0f172a; font-weight:bold;" onclick="ouvrirBooster()">✨ Ouvrir un Paquet !</button>
-        </div>
-        <h3>🖼️ Ta Galerie de Cartes</h3>
-        <div id="cards-gallery" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap:12px;"></div>
-      </section>
-
-      <!-- PAGE ARBRE DE COMPÉTENCES -->
-      <section id="page-tree" class="page">
-        <h2>🌳 Arbre de Compétences Cyber</h2>
-        <div id="skill-tree-container" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px;"></div>
-      </section>
-
-      <!-- PAGE FAMILIERS CYBER -->
-      <section id="page-pets" class="page">
-        <h2>🐾 Familiers & Mascottes Cyber</h2>
-        <div id="pets-container" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px;"></div>
-      </section>
-
-      <!-- PAGE CREATIF & CHILL -->
-      <section id="page-sandbox" class="page">
-        <h2>🎨 Zone Créative & Chill</h2>
-        
-        <div class="card">
-          <h3>💥 Papier Bulle Infini</h3>
-          <div id="bubble-wrap-container" style="display:grid; grid-template-columns: repeat(8, 1fr); gap:6px; max-width:320px; margin:0 auto;"></div>
-        </div>
-
-        <div class="card">
-          <h3>🖼️ Pixel Art Sandbox</h3>
-          <div id="pixel-grid" style="display:grid; grid-template-columns: repeat(10, 1fr); gap:2px; max-width:250px; margin:0 auto;"></div>
-        </div>
-
-        <div class="card" style="text-align:center;">
-          <h3>🔮 Générateur de Citations Rétro-Futuristes</h3>
-          <p id="citation-display" style="font-style:italic; color:#38bdf8;">"Clique ci-dessous pour inspirer ton esprit cyber..."</p>
-          <button class="btn" onclick="genererCitation()">🔮 Générer une citation</button>
-        </div>
-
-        <div class="card">
-          <h3>🔊 Boîte à Meuh Cyber</h3>
-          <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
-            <button class="music-btn" onclick="jouerNote(150, 'sawtooth', 0.5, 0.1)">🔊 Laser</button>
-            <button class="music-btn" onclick="jouerNote(400, 'square', 0.3, 0.1)">💥 Explosion</button>
-            <button class="music-btn" onclick="jouerNote(800, 'sine', 0.6, 0.1)">✨ PowerUp</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- PAGE COMMUNAUTÉ -->
-      <section id="page-community" class="page">
-        <h2>🌐 Espace Communautaire & Anonyme</h2>
-        
-        <div class="card">
-          <h3>📊 Météo d'Humeur Communautaire</h3>
-          <p>Comment te sens-tu aujourd'hui ?</p>
-          <div style="display:flex; gap:10px; justify-content:center;">
-            <button class="music-btn" onclick="voterHumeur('🔥 Super')">🔥 Super</button>
-            <button class="music-btn" onclick="voterHumeur('😎 Cool')">😎 Cool</button>
-            <button class="music-btn" onclick="voterHumeur('😴 Fatigué')">😴 Fatigué</button>
-          </div>
-          <div id="humeur-stats" style="margin-top:10px; font-weight:bold; color:#eab308; text-align:center;"></div>
-        </div>
-
-        <div class="card">
-          <h3>🎨 Mur de Graffiti Collectif (Toile 24h)</h3>
-          <canvas id="graffiti-canvas" width="280" height="150" style="background:#090d16; border:1px solid #334155; display:block; margin:0 auto; cursor:crosshair;"></canvas>
-          <p style="text-align:center; font-size:12px; color:#94a3b8;">Dessine directement sur la toile !</p>
-        </div>
-
-        <div class="card" style="text-align:center;">
-          <h3>⚡ Générateur de Pseudos Cyber</h3>
-          <p id="pseudo-generated" style="font-size:18px; font-weight:bold; color:#a855f7;">Néon_Vortex_99</p>
-          <button class="btn" onclick="genererPseudoCyber()">🎲 Générer un Pseudo</button>
-        </div>
-
-        <div class="card">
-          <h3>📬 Boîte aux Lettres Intergalactique</h3>
-          <textarea id="letter-input" placeholder="Écris une pensée bienveillante..."></textarea>
-          <button class="btn" onclick="envoyerLettre()">🚀 Envoyer dans le cosmos</button>
-          <div id="received-letter" style="margin-top:10px; font-style:italic; color:#4ade80;"></div>
-        </div>
-      </section>
-
-      <!-- PAGE LIVE FEED DÉFIS -->
-      <section id="page-dare" class="page">
-        <h2>🎯 Mur de Défis Communautaire</h2>
-        <div class="card">
-          <p><strong>Défi du jour :</strong> "Prends en photo l'objet le plus étrange près de toi !"</p>
-          <input type="text" id="dare-caption" placeholder="Légende de ta photo...">
-          <input type="file" id="dare-file" accept="image/*" style="margin-top:10px;">
-          <button class="btn" onclick="publierDefi()">Publier sur le Feed</button>
-        </div>
-        <div id="feed-container" style="margin-top:20px;"></div>
-      </section>
-
-      <!-- PAGE TRIBUNAL DES DILEMMES -->
-      <section id="page-dilemme" class="page">
-        <h2>⚖️ Le Tribunal des Dilemmes</h2>
-        <div class="card dilemme-box">
-          <p class="question" id="dilemme-question" style="font-size: 18px; font-weight: bold; margin-bottom: 15px;">Chargement du dilemme...</p>
-          <div id="dilemme-options" style="display: flex; flex-direction: column; gap: 10px;">
-            <button class="choice-btn music-btn" id="opt-1" onclick="voterDilemme(1)">Option 1</button>
-            <button class="choice-btn music-btn" id="opt-2" onclick="voterDilemme(2)">Option 2</button>
-          </div>
-          <div id="dilemme-resultats" style="display:none; text-align: center; margin-top: 15px;">
-            <p id="res-texte" style="font-weight: bold; color: #38bdf8; font-size: 18px; line-height: 1.6;"></p>
-            <button class="btn" onclick="prochainDilemme()" style="background: #22c55e; color: white;">Question Suivante ➡️</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- PAGE DESTRUCTEUR DE SOUCIS -->
-      <section id="page-vent" class="page">
-        <h2>🔥 Le Destructeur de Soucis</h2>
-        <div class="card" style="text-align: center;">
-          <textarea id="vent-input" placeholder="Écris ton stress ici..."></textarea>
-          <button class="btn" style="background:#ef4444; color:white;" onclick="detruireSouci()">💥 Anéantir ce souci !</button>
-        </div>
-      </section>
-
-      <!-- PAGE CAPSULE TEMPORELLE -->
-      <section id="page-capsule" class="page">
-        <h2>⏳ Capsule Temporelle</h2>
-        <div class="card">
-          <textarea id="capsule-text" placeholder="Ton message pour le futur..."></textarea>
-          <div style="margin-top: 10px;">
-            <label>Déverrouillage dans : </label>
-            <select id="capsule-delay" style="background:#1f2937; color:white; border:1px solid #4b5563; padding:8px; border-radius:8px;">
-              <option value="1">1 Minute</option>
-              <option value="5">5 Minutes</option>
-              <option value="60">1 Heure</option>
-            </select>
-          </div>
-          <button class="btn" onclick="creerCapsule()">🔒 Verrouiller dans la Capsule</button>
-        </div>
-        <h3>📦 Tes Capsules Temporelles</h3>
-        <div id="capsules-list"></div>
-      </section>
-
-      <!-- PAGE ÎLE AUX SECRETS -->
-      <section id="page-secrets" class="page">
-        <h2>🏝️ L'Île aux Secrets Anonymes</h2>
-        <div class="card">
-          <textarea id="secret-input" placeholder="Ton secret anonyme..."></textarea>
-          <button class="btn" style="background:#8b5cf6; color:white;" onclick="publierSecret()">🏝️ Déposer sur l'Île</button>
-        </div>
-        <h3>📜 Secrets Anonymes en Direct</h3>
-        <div id="secrets-list"></div>
-      </section>
-
-      <!-- PAGE TROPHÉES ET SUCCÈS -->
-      <section id="page-achievements" class="page">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <h2>🏆 100 Badges & Titres</h2>
-          <div style="background:#1e293b; border:1px solid #eab308; padding:8px 15px; border-radius:20px; font-weight:bold; color:#eab308;">
-            🏆 <span id="trophy-count">0 / 100</span> Trophées
-          </div>
-        </div>
-        <div id="achievements-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-top:15px;"></div>
-      </section>
-
-      <!-- PAGE BOUTIQUE COSMÉTIQUE NÉON -->
-      <section id="page-shop" class="page">
-        <h2>🛍️ Boutique Cosmétique Néon</h2>
-        <p>Dépense tes Points OMNI ⭐ pour débloquer des skins, effets et thèmes exclusifs !</p>
-        
-        <h3>🍕 Skins de Pizza</h3>
-        <div id="pizza-skins-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:10px;"></div>
-
-        <h3 style="margin-top:20px;">💥 Effets de Clic</h3>
-        <div id="click-effects-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:10px;"></div>
-
-        <h3 style="margin-top:20px;">🎨 Thèmes Néon</h3>
-        <div id="neon-themes-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:10px;"></div>
-      </section>
-
-      <!-- PAGE QUÊTES & ROUE OMNI -->
-      <section id="page-wheel" class="page">
-        <h2>🎁 Quêtes Quotidiennes & Roue OMNI</h2>
-        <div class="card" style="text-align:center;">
-          <h3>🎡 La Roue OMNI de la Fortune</h3>
-          <div id="wheel-graphic" style="font-size:80px; transition: transform 3s cubic-bezier(0.15, 0.9, 0.15, 1); display:inline-block;">🎡</div>
-          <br>
-          <button class="btn" style="width:auto; margin-top:15px; background:#eab308; color:#0f172a;" onclick="tournerLaRoue()">🎰 Tourner la Roue</button>
+          <button class="btn" style="width:auto;" onclick="demarrerSimonGame()">▶️ Jouer à Simon</button>
         </div>
       </section>
     </main>
   </div>
 
-  <!-- LECTEUR AUDIO STICKY AVEC VISUALISEUR ET RADIOS -->
   <div id="sticky-audio-bar">
-    <div style="max-width: 800px; margin: 0 auto;">
-      <canvas id="audio-visualizer-canvas" width="800" height="25" style="width:100%; height:25px; display:block; margin-bottom:5px;"></canvas>
-      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap:wrap; gap:8px;">
-        <div style="text-align: left;">
-          <span style="font-size: 10px; color: #a855f7; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;">📻 Cyber Radio Station</span>
-          <p id="track-title" style="margin: 0; font-weight: bold; color: var(--neon-blue); font-size: 13px;">🎵 Track 1: Midnight Cyber Drive</p>
-        </div>
-        <div style="display: flex; gap: 8px; align-items:center;">
-          <button class="music-btn" onclick="musiquePrecedente()">⏮️</button>
-          <button class="music-btn" id="play-pause-btn" onclick="togglePlayPause()">▶️ Play</button>
-          <button class="music-btn" onclick="musiqueSuivante()">⏭️</button>
-        </div>
-      </div>
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <span style="color:var(--neon-blue); font-size:13px; font-weight:bold;">📻 Cyber Radio Station</span>
+      <button class="music-btn" id="play-pause-btn" onclick="togglePlayPause()">▶️ Play Radio</button>
     </div>
   </div>
 
+  <script>
+    const state = {
+      pizzas: 0, clickPower: 1, playTimeSeconds: 0, omniPoints: 0,
+      matrixMode: false, raveMode: false, crtMode: false, titleClicks: 0
+    };
+
+    let audioCtx = null;
+    function initAudioOnFirstInteraction() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+    window.addEventListener("click", initAudioOnFirstInteraction, { once: true });
+    window.addEventListener("touchstart", initAudioOnFirstInteraction, { once: true });
+
+    function jouerNote(freq, type = 'sine', duration = 0.1, vol = 0.1) {
+      if (!audioCtx) initAudioOnFirstInteraction();
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + duration);
+      } catch(e){}
+    }
+
+    // --- PAPIER BULLE INTERACTIF EN GLISSANT ---
+    let isSwipingBubble = false;
+    function initPapierBulle() {
+      const container = document.getElementById("bubble-wrap-container");
+      container.innerHTML = "";
+      for (let i = 0; i < 40; i++) {
+        const bubble = document.createElement("div");
+        bubble.className = "bubble-item";
+        
+        const pop = () => {
+          if (!bubble.classList.contains("popped")) {
+            bubble.classList.add("popped");
+            jouerNote(400 + Math.random() * 300, 'sine', 0.05, 0.15);
+          }
+        };
+
+        bubble.onmouseover = () => { if (isSwipingBubble) pop(); };
+        bubble.onmousedown = pop;
+        bubble.ontouchmove = (e) => {
+          const touch = e.touches[0];
+          const elem = document.elementFromPoint(touch.clientX, touch.clientY);
+          if (elem && elem.classList.contains("bubble-item")) {
+            elem.classList.add("popped");
+            jouerNote(400 + Math.random() * 300, 'sine', 0.05, 0.15);
+          }
+        };
+        container.appendChild(bubble);
+      }
+    }
+
+    // --- PIXEL ART PRO AVEC PALETTE & GLISSEMENT ---
+    let currentColor = "#38bdf8";
+    let isDrawingPixel = false;
+    const colorsList = ["#38bdf8", "#ef4444", "#22c55e", "#eab308", "#a855f7", "#ec4899", "#ffffff", "#0f172a"];
+
+    function initPixelArtPro() {
+      const palette = document.getElementById("palette-container");
+      palette.innerHTML = "";
+      colorsList.forEach((c, idx) => {
+        const swatch = document.createElement("div");
+        swatch.className = "color-swatch" + (idx === 0 ? " active" : "");
+        swatch.style.background = c;
+        if(c === "#0f172a") swatch.style.border = "1px solid #334155";
+        swatch.onclick = () => {
+          document.querySelectorAll(".color-swatch").forEach(s => s.classList.remove("active"));
+          swatch.classList.add("active");
+          currentColor = c;
+        };
+        palette.appendChild(swatch);
+      });
+
+      const grid = document.getElementById("pixel-grid");
+      grid.innerHTML = "";
+      for (let i = 0; i < 144; i++) {
+        const cell = document.createElement("div");
+        cell.style.width = "18px"; cell.style.height = "18px";
+        cell.style.background = "#1e293b"; cell.style.borderRadius = "2px";
+        cell.style.cursor = "pointer";
+
+        const paint = () => { cell.style.background = currentColor; };
+        cell.onmousedown = paint;
+        cell.onmouseenter = () => { if (isDrawingPixel) paint(); };
+        grid.appendChild(cell);
+      }
+    }
+
+    // --- CHATBOT IA ASSISTANT ---
+    function envoyerMessageIA() {
+      const input = document.getElementById("ai-user-input");
+      const text = input.value.trim();
+      if (!text) return;
+
+      const chatBox = document.getElementById("ai-chat-box");
+      
+      // User message
+      const userMsg = document.createElement("div");
+      userMsg.style.cssText = "background:var(--neon-blue); color:#0f172a; font-weight:bold; padding:8px 12px; border-radius:8px; align-self:flex-end; max-width:80%;";
+      userMsg.innerText = text;
+      chatBox.appendChild(userMsg);
+      input.value = "";
+
+      // AI Reponse dynamique
+      setTimeout(() => {
+        const aiMsg = document.createElement("div");
+        aiMsg.style.cssText = "background:#1e293b; padding:8px 12px; border-radius:8px; align-self:flex-start; max-width:80%;";
+        
+        let reply = "🤖 ";
+        const lower = text.toLowerCase();
+        if (lower.includes("salut") || lower.includes("bonjour")) reply += "Salutations, utilisateur Cyber ! Prêt à accumuler des pizzas ?";
+        else if (lower.includes("pizza") || lower.includes("score")) reply += `Tu as actuellement ${Math.floor(state.pizzas)} pizzas ! Clique plus vite pour débloquer le prochain palier !`;
+        else if (lower.includes("conseil") || lower.includes("aide")) reply += "Mon conseil : Va sur la page Créatif & Chill pour détendre tes doigts avec le papier bulle ou créer un Pixel Art !";
+        else reply += `J'ai analysé ta demande "${text}". Tout fonctionne à 100% dans l'OmniApp !`;
+
+        aiMsg.innerHTML = reply;
+        chatBox.appendChild(aiMsg);
+        chatBox.scrollTop = chatBox.scrollHeight;
+        jouerNote(600, 'sine', 0.1, 0.1);
+      }, 500);
+    }
+
+    // --- GENERATEUR DE CITATION IA ---
+    const aiSubjects = ["L'intelligence artificielle", "La matrice néon", "Le réseau quantique", "La pizza sacrée", "L'algorithme de l'esprit"];
+    const aiVerbs = ["illumine", "transcende", "recalibre", "harmonise", "multiplie"];
+    const aiContexts = ["les réalités virtuelles.", "le futur du Cyber-Espace.", "les possibilités de l'OmniApp.", "l'énergie des étoiles."];
+
+    function genererCitationIA() {
+      const sub = aiSubjects[Math.floor(Math.random() * aiSubjects.length)];
+      const verb = aiVerbs[Math.floor(Math.random() * aiVerbs.length)];
+      const ctx = aiContexts[Math.floor(Math.random() * aiContexts.length)];
+      document.getElementById("citation-display").innerText = `« ${sub} ${verb} ${ctx} »`;
+      jouerNote(500, 'triangle', 0.15, 0.1);
+    }
+
+    // --- SIMON SAYS CLAIR ---
+    let simonSeq = [], simonUserStep = 0, simonPlaying = false;
+    function demarrerSimonGame() {
+      simonSeq = [Math.floor(Math.random() * 4)];
+      simonUserStep = 0;
+      jouerSequenceSimon();
+    }
+
+    function jouerSequenceSimon() {
+      simonPlaying = false;
+      document.getElementById("simon-status").innerText = "👀 OBSERVE LA SÉQUENCE...";
+      let i = 0;
+      const interval = setInterval(() => {
+        flasherBoutonSimon(simonSeq[i]);
+        i++;
+        if (i >= simonSeq.length) {
+          clearInterval(interval);
+          setTimeout(() => {
+            simonPlaying = true;
+            document.getElementById("simon-status").innerText = "👉 À TON TOUR !";
+          }, 500);
+        }
+      }, 700);
+    }
+
+    function flasherBoutonSimon(id) {
+      const btn = document.getElementById("simon-" + id);
+      const originalOpacity = btn.style.opacity;
+      btn.style.opacity = "0.3";
+      jouerNote(200 + id * 100, 'sine', 0.2, 0.2);
+      setTimeout(() => { btn.style.opacity = "1"; }, 300);
+    }
+
+    function cliquerSimon(id) {
+      if (!simonPlaying) return;
+      flasherBoutonSimon(id);
+      if (id === simonSeq[simonUserStep]) {
+        simonUserStep++;
+        if (simonUserStep >= simonSeq.length) {
+          simonUserStep = 0;
+          simonSeq.push(Math.floor(Math.random() * 4));
+          setTimeout(jouerSequenceSimon, 800);
+        }
+      } else {
+        alert("💥 Erreur Simon ! Score : " + (simonSeq.length - 1));
+        simonPlaying = false;
+        document.getElementById("simon-status").innerText = "🔴 Clique sur Jouer";
+      }
+    }
+
+    function cliquerPizza(e) {
+      state.pizzas += state.clickPower;
+      document.getElementById("score-pieces").innerText = Math.floor(state.pizzas);
+      jouerNote(300, 'square', 0.05, 0.05);
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+      document.querySelectorAll(".menu-btn").forEach(b => b.classList.remove("active"));
+      document.getElementById("page-" + tabId).classList.add("active");
+      document.getElementById("btn-" + tabId).classList.add("active");
+    }
+
+    function toggleCRTMode() {
+      state.crtMode = !state.crtMode;
+      document.getElementById("crt-overlay").style.display = state.crtMode ? "block" : "none";
+    }
+
+    function toggleRaveMode() {
+      state.raveMode = !state.raveMode;
+      document.body.classList.toggle("rave-active", state.raveMode);
+      document.getElementById("rave-btn").innerText = state.raveMode ? "🟢 Mode Rave : ON" : "🔴 Mode Rave : OFF";
+    }
+
+    window.onload = () => {
+      initPapierBulle();
+      initPixelArtPro();
+    };
+  </script>
 </body>
 </html>
