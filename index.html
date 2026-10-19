@@ -14,7 +14,7 @@
       --bg-dark: #0f172a;
     }
 
-    /* DESACTIVATION TOTALE DE LA SELECTION DE TEXTE POUR ÉVITER LE BLEU MOCHE */
+    /* INTERDICTION TOTALE DE LA SELECTION DE TEXTE (EVITE LE BLEU MOCHE) */
     *, *::before, *::after {
       user-select: none !important;
       -webkit-user-select: none !important;
@@ -80,7 +80,7 @@
 
     header { text-align: center; margin-bottom: 30px; margin-top: 10px; }
     
-    /* TITRE OMNIAPP GEANT ET IMPOSSIBLE A SURLIGNER */
+    /* TITRE OMNI-APP GEANT ET NON SELECTIONNABLE */
     header h1 {
       font-size: 64px; margin: 0; color: var(--neon-blue);
       cursor: pointer; text-shadow: 0 0 20px var(--neon-blue), 0 0 40px var(--neon-purple);
@@ -134,7 +134,7 @@
     }
     .shop-item.available { border-color: var(--neon-blue); }
 
-    /* CARTES RARES (BOOSTER POKEMON) */
+    /* CARTES RARES (BOOSTER) */
     .booster-pack {
       width: 180px; height: 260px; background: linear-gradient(135deg, #a855f7, #ec4899);
       border: 4px solid var(--neon-gold); border-radius: 16px; margin: 20px auto;
@@ -154,7 +154,7 @@
     }
     .card-item:hover { transform: translateY(-10px); border-color: var(--neon-gold); }
 
-    /* ZONES XL */
+    /* ZONES XL & TEXTAREA */
     .xl-textarea {
       width: 100%; height: 200px; background: #090d16;
       border: 2px solid var(--neon-purple); color: white;
@@ -178,7 +178,7 @@
       box-shadow: 0 0 40px var(--neon-gold); transition: transform 4s cubic-bezier(0.15, 0.9, 0.15, 1);
     }
 
-    /* BOUTIQUE NÉON */
+    /* BOUTIQUE COSMÉTIQUE */
     .shop-cosmetic-grid {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px;
     }
@@ -204,7 +204,7 @@
       background: #1e293b; border-color: #334155; transform: scale(0.85); box-shadow: none;
     }
 
-    /* DILEMMES XL */
+    /* TRIBUNAL DES DILEMMES (XL) */
     .dilemme-giant-title {
       font-size: 32px; font-weight: 900; text-align: center; color: var(--neon-blue); margin-bottom: 30px; line-height: 1.4;
     }
@@ -250,7 +250,7 @@
   <div class="app-container">
     <header>
       <h1 id="main-title" onclick="compterClicsTitre()">🚀 OMNI-APP</h1>
-      <p id="user-title-tag" style="color:var(--neon-blue); font-weight:bold;">🌌 Cyberpunk Mega Edition Ultime — 👑 Débutant Cyber</p>
+      <p id="user-title-tag" style="color:var(--neon-blue); font-weight:bold;">🌌 Cyberpunk Ultimate Mega Edition — 👑 Débutant Cyber</p>
     </header>
 
     <nav class="main-menu">
@@ -284,7 +284,7 @@
         </div>
       </section>
 
-      <!-- 2. CLICKER -->
+      <!-- 2. PIZZA CLICKER -->
       <section id="page-clicker" class="page">
         <div class="card" style="text-align: center;">
           <h3 style="font-size:28px; color:var(--neon-gold);">💰 <span id="score-pieces">0</span> Pizzas</h3>
@@ -366,7 +366,7 @@
         </div>
       </section>
 
-      <!-- 6. CREATIF & CHILL -->
+      <!-- 6. CRÉATIF & CHILL -->
       <section id="page-sandbox" class="page">
         <h2>🎨 Zone Créative & Chill</h2>
         <div class="card">
