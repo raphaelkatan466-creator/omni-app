@@ -1,4 +1,4 @@
-// --- STATE GLOBAL (Inclus la totalité des variables) ---
+// --- STATE GLOBAL ---
 const state = {
   username: "Joueur Cyber",
   userAvatar: "🤖",
@@ -35,45 +35,86 @@ const state = {
   pets: { robot: { level: 1, active: true }, dragon: { level: 0, active: false } }
 };
 
-// --- RÉINITIALISATION GARANTIE ET EFFACEMENT COMPLET ---
-function reinitialiserTout() {
-  const reponse = confirm("⚠️ Es-tu sûr de vouloir supprimer toute ta progression et réinitialiser l'application ?");
-  if (reponse) {
-    localStorage.removeItem("omni_app_full_save");
-    localStorage.clear();
+// --- HACKER / MATRIX ANIMATED CANVAS ENGINE ---
+let matrixCanvas, matrixCtx, matrixInterval;
+const matrixChars = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン";
+let matrixDrops = [];
 
-    state.username = "Joueur Cyber";
-    state.userAvatar = "🤖";
-    state.userTitle = "👑 Débutant Cyber";
-    state.pizzas = 0;
-    state.clickPower = 1;
-    state.pizzasPerSec = 0;
-    state.playTimeSeconds = 0;
-    state.omniPoints = 0;
-    state.quantiquePoints = 0;
-    state.feedPosts = [];
-    state.capsules = [];
-    state.secrets = [];
-    state.votedSecrets = [];
-    state.snakeScore = 0;
-    state.activeSkin = '🍕';
-    state.activeEffectColor = 'cyan';
-    state.activeTheme = 'blue';
-    state.wheelSpunToday = false;
-    state.achievements = {};
-    state.unlockedSkins = ['🍕'];
-    state.unlockedEffects = ['cyan'];
-    state.unlockedThemes = ['blue'];
-    state.userCards = [];
-    state.skills = { clickBoost: 0, autoBoost: 0, luckBoost: 0 };
+function initMatrixEngine() {
+  matrixCanvas = document.getElementById("matrix-canvas");
+  if (!matrixCanvas) return;
+  matrixCtx = matrixCanvas.getContext("2d");
+  matrixCanvas.width = window.innerWidth;
+  matrixCanvas.height = window.innerHeight;
 
-    sauvegarderDonnees();
-    rafraichirAffichagePizza();
-    window.location.reload(true);
+  const columns = Math.floor(matrixCanvas.width / 16);
+  matrixDrops = [];
+  for (let i = 0; i < columns; i++) matrixDrops[i] = Math.floor(Math.random() * -50);
+}
+
+function drawMatrixFrame() {
+  if (!state.matrixMode || !matrixCtx) return;
+  matrixCtx.fillStyle = "rgba(0, 0, 0, 0.05)";
+  matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+
+  matrixCtx.fillStyle = "#00ff66";
+  matrixCtx.font = "14px monospace";
+
+  for (let i = 0; i < matrixDrops.length; i++) {
+    const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+    matrixCtx.fillText(text, i * 16, matrixDrops[i] * 16);
+
+    if (matrixDrops[i] * 16 > matrixCanvas.height && Math.random() > 0.975) {
+      matrixDrops[i] = 0;
+    }
+    matrixDrops[i]++;
   }
 }
 
-// --- FILTRE CRT & EVENEMENT HAPPY HOUR ---
+function toggleMatrix() {
+  state.matrixMode = !state.matrixMode;
+  document.body.classList.toggle("matrix-mode", state.matrixMode);
+  if (state.matrixMode) {
+    initMatrixEngine();
+    if (!matrixInterval) matrixInterval = setInterval(drawMatrixFrame, 33);
+  } else {
+    if (matrixCtx) matrixCtx.clearRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+  }
+}
+
+function compterClicsTitre() {
+  state.titleClicks++;
+  if (state.titleClicks >= 5) {
+    state.titleClicks = 0;
+    toggleMatrix();
+    alert("💻 MODE MATRIX ACTIVÉ !");
+  }
+}
+
+// --- RAVE MODE ---
+let raveEmojiInterval;
+function toggleRaveMode() {
+  state.raveMode = !state.raveMode;
+  document.body.classList.toggle("rave-active", state.raveMode);
+  const btn = document.getElementById("rave-btn");
+  if (btn) btn.innerText = state.raveMode ? "🟢 Mode Rave : ON" : "🔴 Mode Rave : OFF";
+
+  if (state.raveMode) {
+    const emojis = ["🎉", "⚡", "🍕", "🔥", "💎", "🌌"];
+    raveEmojiInterval = setInterval(() => {
+      const em = document.createElement("div");
+      em.className = "rave-emoji";
+      em.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+      em.style.left = Math.random() * 95 + "vw";
+      document.getElementById("rave-emoji-container").appendChild(em);
+      setTimeout(() => em.remove(), 2500);
+    }, 150);
+  } else {
+    clearInterval(raveEmojiInterval);
+  }
+}
+
+// --- FILTRE CRT & HAPPY HOUR ---
 function toggleCRTMode() {
   state.crtMode = !state.crtMode;
   document.getElementById("crt-overlay").style.display = state.crtMode ? "block" : "none";
@@ -87,7 +128,7 @@ function verifierHappyHour() {
   return isHappy ? 5 : 1;
 }
 
-// --- PIZZA CLICKER & EFFETS VISUELS FLOTTANTS ET PARTICULES ---
+// --- PIZZA CLICKER EXTRÊME ---
 function cliquerPizza(e) {
   const mult = verifierHappyHour();
   const gain = state.clickPower * mult;
@@ -97,14 +138,15 @@ function cliquerPizza(e) {
 
   const pizzaEl = document.getElementById("pizza-gigante");
   const container = document.getElementById("pizza-container");
+
   if (pizzaEl && container) {
     pizzaEl.classList.add("clicked");
     setTimeout(() => pizzaEl.classList.remove("clicked"), 80);
 
+    const rect = container.getBoundingClientRect();
     const floating = document.createElement("div");
     floating.className = "floating-text";
     floating.innerText = "+" + gain;
-    const rect = container.getBoundingClientRect();
     floating.style.left = (e.clientX - rect.left) + "px";
     floating.style.top = (e.clientY - rect.top) + "px";
     container.appendChild(floating);
@@ -120,7 +162,8 @@ function cliquerPizza(e) {
       const dist = 35 + Math.random() * 55;
       sp.style.setProperty("--dx", Math.cos(angle) * dist + "px");
       sp.style.setProperty("--dy", Math.sin(angle) * dist + "px");
-      sp.style.left = (rect.width / 2) + "px"; sp.style.top = (rect.height / 2) + "px";
+      sp.style.left = (rect.width / 2) + "px";
+      sp.style.top = (rect.height / 2) + "px";
       sp.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
       container.appendChild(sp);
       setTimeout(() => sp.remove(), 500);
@@ -139,7 +182,7 @@ function rafraichirAffichagePizza() {
   afficherLeaderboard();
 }
 
-// --- BOUTIQUE DE PRODUCTION (22 OBJET) ---
+// --- BOUTIQUE PRODUCTIONS ---
 const OFFRES_BOUTIQUE = [
   { id: 1, name: "Super Clic", cost: 15, power: 1, cps: 0, desc: "+1 par clic" },
   { id: 2, name: "Livreur à Vélo", cost: 50, power: 0, cps: 1, desc: "+1 pizza/sec" },
@@ -186,19 +229,19 @@ function acheterObjet(id) {
   }
 }
 
-// --- SYSTEME DE PRESTIGE ---
+// --- PRESTIGE ---
 function effectuerPrestige() {
-  if (state.pizzas < 1000000) return alert("Il te faut au moins 1 000 000 de Pizzas !");
-  if (confirm("✨ Voulez-vous effectuer une Renaissance pour des Pizzas Quantiques ?")) {
+  if (state.pizzas < 1000000) return alert("1 000 000 de Pizzas requis pour la Renaissance !");
+  if (confirm("✨ Voulez-vous réinitialiser vos pizzas en échange de Pizzas Quantiques ?")) {
     const gagne = Math.floor(state.pizzas / 1000000);
     state.quantiquePoints += gagne;
     state.pizzas = 0; state.clickPower = 1 + state.quantiquePoints * 2; state.pizzasPerSec = 0;
-    alert(`🎉 Renaissance réussie ! +${gagne} Pizzas Quantiques !`);
+    alert(`🎉 RENAISSANCE RÉUSSIE ! +${gagne} Pizzas Quantiques !`);
     sauvegarderDonnees(); rafraichirAffichagePizza();
   }
 }
 
-// --- ARCADE HUB (7 MINI-JEUX) ---
+// --- CYBER ARCADE HUB ---
 let arcadeInterval = null;
 
 function switchArcadeGame(game) {
@@ -221,7 +264,7 @@ function demarrerJeuArcadeActuel() {
   else if (state.currentArcadeGame === 'typer') demarrerSpeedTyper();
 }
 
-// CYBER-SNAKE REALISTE
+// CYBER-SNAKE
 function demarrerSnake() {
   const canvas = document.getElementById("arcade-canvas");
   if (!canvas) return;
@@ -423,7 +466,7 @@ window.addEventListener("keydown", (e) => {
   }
 });
 
-// --- CARTES, COMPETENCES & FAMILIERS ---
+// --- CARTES RARES ---
 const CARTE_BANQUE = [
   { id: 'c1', name: 'Pizza Originelle', rarity: 'Commune', icon: '🍕', color: '#94a3b8' },
   { id: 'c2', name: 'Livreur Vélo-Laser', rarity: 'Rare', icon: '🚴‍♂️', color: '#38bdf8' },
@@ -464,6 +507,7 @@ function afficherGalerieCartes() {
   }).join("");
 }
 
+// --- ARBRE DE COMPÉTENCES ---
 function afficherArbreCompetences() {
   const container = document.getElementById("skill-tree-container");
   if (!container) return;
@@ -666,7 +710,7 @@ function genererBoutiqueCosmetique() {
 }
 function equiperSkin(id) { state.activeSkin = id; document.getElementById("pizza-gigante").innerText = id; sauvegarderDonnees(); }
 
-// --- AUDIO & RADIOS ---
+// --- AUDIO VISUALIZER & RADIOS ---
 let audioCtx = null, musicInterval = null, noteIndex = 0;
 const TRACK_LIST = [
   { name: "🎵 Track 1: Midnight Cyber Drive", scale: [220, 246, 261, 293, 329] },
@@ -681,9 +725,22 @@ function togglePlayPause() {
     musicInterval = setInterval(() => {
       const track = TRACK_LIST[state.trackIndex];
       jouerNote(track.scale[noteIndex % track.scale.length], 'sawtooth', 0.3, 0.03);
+      drawVisualizerFrame();
       noteIndex++;
     }, 250);
   } else clearInterval(musicInterval);
+}
+
+function drawVisualizerFrame() {
+  const canvas = document.getElementById("audio-visualizer-canvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#38bdf8";
+  for (let i = 0; i < 40; i++) {
+    const h = Math.random() * 20 + 2;
+    ctx.fillRect(i * 20, 25 - h, 14, h);
+  }
 }
 
 function jouerNote(freq, type, duration, vol) {
@@ -748,17 +805,11 @@ function tournerLaRoue() {
   alert("🎉 +25 Points OMNI ⭐ !"); sauvegarderDonnees();
 }
 
-function compterClicsTitre() {
-  state.titleClicks++;
-  if (state.titleClicks >= 5) { state.titleClicks = 0; toggleMatrix(); }
-}
-function toggleMatrix() {
-  state.matrixMode = !state.matrixMode;
-  document.body.classList.toggle("matrix-mode", state.matrixMode);
-}
-function toggleRaveMode() {
-  state.raveMode = !state.raveMode;
-  document.getElementById("rave-btn").innerText = state.raveMode ? "🟢 Mode Rave : ON" : "🔴 Mode Rave : OFF";
+function reinitialiserTout() {
+  if (confirm("⚠️ Réinitialiser TOUTE la partie et effacer les sauvegardes ?")) {
+    localStorage.clear();
+    window.location.reload(true);
+  }
 }
 
 // --- NAVIGATION & INIT ---
@@ -781,10 +832,18 @@ function sauvegarderDonnees() {
 
 window.addEventListener("load", () => {
   chargerDonnees();
+  initMatrixEngine();
   chargerDilemmeActuel(); genererInterfaceBoutique(); genererBoutiqueCosmetique();
   afficherGalerieCartes(); afficherArbreCompetences(); afficherFamiliers();
   initPapierBulle(); initPixelArt(); afficherFeed(); afficherSecrets(); afficherCapsules();
   afficherSucces(); rafraichirAffichagePizza();
+});
+
+window.addEventListener("resize", () => {
+  if (matrixCanvas) {
+    matrixCanvas.width = window.innerWidth;
+    matrixCanvas.height = window.innerHeight;
+  }
 });
 
 setInterval(() => {
