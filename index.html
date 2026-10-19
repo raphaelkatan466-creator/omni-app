@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OMNI-APP - Cyberpunk Social Mega Edition</title>
+  <title>OMNI-APP - Cyberpunk Mega Edition</title>
   <link rel="manifest" href="manifest.json">
   <style>
     :root {
       --neon-blue: #38bdf8;
       --neon-pink: #ec4899;
       --neon-purple: #a855f7;
+      --neon-gold: #eab308;
       --bg-dark: #0f172a;
     }
 
@@ -23,6 +24,7 @@
       -webkit-user-select: none;
     }
 
+    /* EFFET CRT SCREEN */
     #crt-overlay {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
       background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
@@ -30,6 +32,7 @@
       pointer-events: none; z-index: 999; display: none;
     }
 
+    /* MATRIX & RAVE */
     #matrix-canvas-container {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
       pointer-events: none; z-index: -1;
@@ -62,125 +65,89 @@
     }
 
     .app-container {
-      max-width: 900px; margin: 0 auto; padding: 20px; padding-bottom: 100px;
+      max-width: 950px; margin: 0 auto; padding: 20px; padding-bottom: 120px;
     }
 
-    header { text-align: center; margin-bottom: 20px; }
+    header { text-align: center; margin-bottom: 25px; }
     header h1 {
-      font-size: 48px; margin: 0; color: var(--neon-blue);
-      cursor: pointer; text-shadow: 0 0 15px var(--neon-blue);
+      font-size: 52px; margin: 0; color: var(--neon-blue);
+      cursor: pointer; text-shadow: 0 0 20px var(--neon-blue), 0 0 40px var(--neon-purple);
       user-select: none; -webkit-user-select: none;
+      letter-spacing: 2px;
     }
 
     .main-menu {
-      display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; justify-content: center;
+      display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; justify-content: center;
     }
 
     .menu-btn {
-      background: #1e293b; border: 1px solid var(--neon-blue); color: white;
-      padding: 9px 14px; border-radius: 8px; cursor: pointer; font-weight: bold;
-      transition: all 0.2s ease;
+      background: #1e293b; border: 2px solid var(--neon-blue); color: white;
+      padding: 10px 16px; border-radius: 10px; cursor: pointer; font-weight: bold;
+      transition: all 0.2s ease; box-shadow: 0 0 8px rgba(56, 189, 248, 0.2);
     }
     .menu-btn:hover, .menu-btn.active {
-      background: var(--neon-blue); color: #0f172a; box-shadow: 0 0 10px var(--neon-blue);
+      background: var(--neon-blue); color: #0f172a; box-shadow: 0 0 15px var(--neon-blue);
+      transform: translateY(-2px);
     }
 
     .page { display: none; }
     .page.active { display: block; }
 
+    /* CADRES & CARTE STYLE CYBER PUNK */
     .card {
-      background: rgba(30, 41, 59, 0.85); border: 1px solid #334155;
-      border-radius: 12px; padding: 20px; margin-bottom: 20px; backdrop-filter: blur(8px);
+      background: rgba(15, 23, 42, 0.9);
+      border: 2px solid #334155;
+      border-radius: 16px; padding: 22px; margin-bottom: 22px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(255, 255, 255, 0.02);
     }
 
-    /* PIZZA CLICKER */
-    #pizza-rotation-wrapper {
-      display: inline-block; animation: spinPizza 20s linear infinite;
-    }
-    @keyframes spinPizza {
-      from { transform: rotate(0deg); } to { transform: rotate(360deg); }
-    }
-    #pizza-gigante {
-      font-size: 110px; cursor: pointer; user-select: none;
-      transition: transform 0.08s ease; display: inline-block;
-    }
-    #pizza-gigante.clicked { transform: scale(0.85); }
-
-    .floating-text {
-      position: absolute; color: #eab308; font-weight: bold; font-size: 26px;
-      pointer-events: none; z-index: 10; animation: floatUp 0.6s ease-out forwards;
-    }
-    @keyframes floatUp {
-      0% { opacity: 1; transform: translateY(0) scale(1); }
-      100% { opacity: 0; transform: translateY(-40px) scale(1.3); }
+    /* CAPSULE & SECRETS XL */
+    .xl-textarea {
+      width: 100%; height: 200px; background: #090d16;
+      border: 2px solid var(--neon-purple); color: white;
+      padding: 16px; font-size: 16px; border-radius: 12px;
+      box-sizing: border-border-box; resize: vertical;
+      box-shadow: inset 0 0 10px rgba(168, 85, 247, 0.2);
     }
 
-    .pizza-sparkle {
-      position: absolute; width: 8px; height: 8px; border-radius: 50%;
-      pointer-events: none; z-index: 9; animation: sparkleAnim 0.5s ease-out forwards;
+    /* ROUE XL */
+    #wheel-modal {
+      display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(15, 23, 42, 0.95); z-index: 2000;
+      justify-content: center; align-items: center; flex-direction: column;
     }
-    @keyframes sparkleAnim {
-      0% { opacity: 1; transform: translate(0, 0) scale(1); }
-      100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0); }
-    }
-
-    .shop-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px;
-    }
-    .shop-item {
-      background: #1e293b; border: 1px solid #334155; padding: 10px;
-      border-radius: 8px; display: flex; justify-content: space-between; align-items: center;
-    }
-    .shop-item.available { border-color: var(--neon-blue); }
-
-    /* CRÉATIF CHILL */
-    .color-swatch {
-      width: 28px; height: 28px; border-radius: 6px; cursor: pointer;
-      border: 2px solid transparent; transition: transform 0.1s;
-    }
-    .color-swatch.active { border-color: white; transform: scale(1.15); }
-
-    .bubble-item {
-      width: 32px; height: 32px; border-radius: 50%; background: #38bdf8;
-      border: 2px solid #0284c7; cursor: pointer; transition: transform 0.1s;
-      box-shadow: inset 0 -3px 6px rgba(0,0,0,0.3);
-    }
-    .bubble-item.popped {
-      background: #1e293b; border-color: #334155; transform: scale(0.85); box-shadow: none;
+    #wheel-canvas {
+      border: 6px solid var(--neon-gold); border-radius: 50%;
+      box-shadow: 0 0 30px var(--neon-gold); transition: transform 4s cubic-bezier(0.15, 0.9, 0.15, 1);
     }
 
-    /* DILEMME & ANTI STRESS GEANT */
-    .dilemme-giant-title {
-      font-size: 26px; font-weight: bold; text-align: center; color: var(--neon-blue); margin-bottom: 20px;
+    /* BOUTIQUE COSMÉTIQUE */
+    .shop-cosmetic-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px;
     }
-    .dilemme-giant-btn {
-      font-size: 18px; padding: 18px; border-radius: 12px; border: 2px solid var(--neon-purple);
-      background: #1e293b; color: white; cursor: pointer; transition: transform 0.1s, background 0.2s;
-      width: 100%; text-align: center; font-weight: bold;
+    .cosmetic-card {
+      background: #1e293b; border: 2px solid #334155; border-radius: 12px;
+      padding: 15px; text-align: center; transition: all 0.2s;
     }
-    .dilemme-giant-btn:hover {
-      background: var(--neon-purple); transform: scale(1.02);
-    }
-    .vent-giant-textarea {
-      width: 100%; height: 220px; background: #0f172a; border: 2px solid #ef4444;
-      color: white; padding: 15px; font-size: 16px; border-radius: 12px; box-sizing: border-box; resize: vertical;
-    }
+    .cosmetic-card.owned { border-color: #22c55e; }
 
     #sticky-audio-bar {
       position: fixed; bottom: 0; left: 0; right: 0; background: rgba(15, 23, 42, 0.95);
-      border-top: 1px solid var(--neon-purple); padding: 8px 15px; backdrop-filter: blur(10px); z-index: 900;
+      border-top: 2px solid var(--neon-purple); padding: 10px 20px; backdrop-filter: blur(10px); z-index: 900;
     }
     .music-btn {
       background: #334155; border: 1px solid #475569; color: white;
-      padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold;
+      padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: bold;
     }
     .btn {
       background: var(--neon-blue); color: #0f172a; border: none;
-      padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 16px;
+      padding: 12px 24px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; font-size: 16px;
+      box-shadow: 0 0 10px var(--neon-blue);
     }
     textarea, input[type="text"] {
-      width: 100%; background: #0f172a; border: 1px solid #334155;
-      color: white; padding: 10px; border-radius: 8px; box-sizing: border-box; font-size: 14px;
+      width: 100%; background: #090d16; border: 2px solid #334155;
+      color: white; padding: 12px; border-radius: 10px; box-sizing: border-box; font-size: 15px;
     }
   </style>
 </head>
@@ -199,18 +166,16 @@
   <div class="app-container">
     <header>
       <h1 id="main-title" onclick="compterClicsTitre()">🚀 OMNI-APP</h1>
-      <p id="user-title-tag">Cyberpunk Social Mega Edition — 👑 Débutant Cyber</p>
+      <p id="user-title-tag">🌌 Cyberpunk Social Mega Edition — 👑 Débutant Cyber</p>
     </header>
 
     <nav class="main-menu">
       <button id="btn-home" class="menu-btn active" onclick="switchTab('home')">🏠 Profil</button>
       <button id="btn-clicker" class="menu-btn" onclick="switchTab('clicker')">🎮 Clicker</button>
-      <button id="btn-pets" class="menu-btn" onclick="switchTab('pets')">🤖 Robot IA</button>
-      <button id="btn-arcade" class="menu-btn" onclick="switchTab('arcade')">🕹️ Arcade</button>
-      <button id="btn-sandbox" class="menu-btn" onclick="switchTab('sandbox')">🎨 Créatif</button>
-      <button id="btn-community" class="menu-btn" onclick="switchTab('community')">🌐 Communauté</button>
-      <button id="btn-dilemme" class="menu-btn" onclick="switchTab('dilemme')">⚖️ Dilemmes</button>
-      <button id="btn-vent" class="menu-btn" onclick="switchTab('vent')">🔥 Anti-Stress</button>
+      <button id="btn-capsule" class="menu-btn" onclick="switchTab('capsule')">⏳ Capsule XL</button>
+      <button id="btn-secrets" class="menu-btn" onclick="switchTab('secrets')">🏝️ Secrets XL</button>
+      <button id="btn-shop" class="menu-btn" onclick="switchTab('shop')">🛍️ Boutique Néon</button>
+      <button id="btn-wheel" class="menu-btn" onclick="switchTab('wheel')">🎡 Quêtes & Roue XL</button>
     </nav>
 
     <main class="content">
@@ -220,7 +185,7 @@
           <div id="profile-avatar" style="font-size:50px; cursor:pointer;" onclick="changerAvatar()">🤖</div>
           <div style="flex-grow:1;">
             <input type="text" id="username-input" value="Joueur Cyber" onchange="sauvegarderProfil()">
-            <p id="profile-title-display" style="margin:5px 0 0 0; color:#eab308; font-weight:bold;">👑 Titre : Débutant Cyber</p>
+            <p id="profile-title-display" style="margin:5px 0 0 0; color:var(--neon-gold); font-weight:bold;">👑 Titre : Débutant Cyber</p>
           </div>
         </div>
       </section>
@@ -229,529 +194,236 @@
       <section id="page-clicker" class="page">
         <div class="card" style="text-align: center;">
           <h3>💰 <span id="score-pieces">0</span> Pizzas</h3>
-          <p style="font-size: 13px; color: #94a3b8;">⚡ +<span id="pieces-par-seconde">0</span>/sec | 💥 +<span id="click-power-display">1</span> par clic</p>
+          <p style="font-size: 14px; color: #94a3b8;">⚡ +<span id="pieces-par-seconde">0</span>/sec | 💥 +<span id="click-power-display">1</span> par clic</p>
           <div id="pizza-container" style="position: relative; display: inline-block; margin: 15px 0;">
             <div id="pizza-rotation-wrapper">
               <div id="pizza-gigante" onclick="cliquerPizza(event)">🍕</div>
             </div>
           </div>
         </div>
-        <h3>🛒 Améliorations</h3>
-        <div id="shop-container" class="shop-grid"></div>
       </section>
 
-      <!-- ROBOT IA -->
-      <section id="page-pets" class="page">
-        <h2>🤖 Robot Cyber-Bot (Intelligence Artificielle)</h2>
-        <div class="card" style="display:flex; flex-direction:column; gap:12px;">
-          <div style="display:flex; align-items:center; gap:15px;">
-            <span style="font-size:50px;">🤖</span>
-            <div>
-              <h3 style="margin:0; color:var(--neon-blue);">Cyber-Bot Assistant</h3>
-              <p style="margin:0; font-size:13px; color:#94a3b8;">Pose-moi des questions ou demande-moi des conseils !</p>
-            </div>
-          </div>
-          <div id="ai-chat-box" style="height:180px; background:#0f172a; border:1px solid #334155; border-radius:8px; padding:10px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;">
-            <div style="background:#1e293b; padding:8px 12px; border-radius:8px; align-self:flex-start; max-width:80%; font-size:13px;">
-              🤖 <strong>Cyber-Bot :</strong> Salut ! Je suis ton assistant IA. Prêt à dominer l'Omni-App ?
-            </div>
-          </div>
-          <div style="display:flex; gap:8px;">
-            <input type="text" id="ai-user-input" placeholder="Écris à ton familier IA..." onkeydown="if(event.key==='Enter') envoyerMessageIA()">
-            <button class="btn" style="width:auto;" onclick="envoyerMessageIA()">Envoyer</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- ARCADE HUB -->
-      <section id="page-arcade" class="page">
-        <h2>🕹️ Arcade Hub & Simon Says</h2>
-        <div class="card" style="text-align: center;">
-          <h3 id="simon-status">🔴 Simon Says - Appuie sur Jouer</h3>
-          <div id="simon-grid" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:10px; max-width:200px; margin:15px auto;">
-            <button id="simon-0" class="music-btn" style="height:70px; background:#ef4444;" onclick="cliquerSimon(0)"></button>
-            <button id="simon-1" class="music-btn" style="height:70px; background:#38bdf8;" onclick="cliquerSimon(1)"></button>
-            <button id="simon-2" class="music-btn" style="height:70px; background:#22c55e;" onclick="cliquerSimon(2)"></button>
-            <button id="simon-3" class="music-btn" style="height:70px; background:#eab308;" onclick="cliquerSimon(3)"></button>
-          </div>
-          <button class="btn" style="width:auto;" onclick="demarrerSimonGame()">▶️ Jouer à Simon Says</button>
-        </div>
-      </section>
-
-      <!-- CRÉATIF CHILL -->
-      <section id="page-sandbox" class="page">
-        <h2>🎨 Zone Créative & Chill</h2>
+      <!-- CAPSULE TEMPORELLE XL -->
+      <section id="page-capsule" class="page">
+        <h2>⏳ Capsule Temporelle XL 📦</h2>
         <div class="card">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-            <h3 style="margin:0;">💥 Papier Bulle (Glisse ton doigt/souris)</h3>
-            <button class="music-btn" onclick="initPapierBulle()">🔄 Régénérer</button>
+          <p style="color:#94a3b8;">Verrouille une pensée ou un message секреt qui ne se rouvrira qu'après le délai choisi !</p>
+          <textarea id="capsule-text" class="xl-textarea" placeholder="✍️ Écris ton message pour le futur ici..."></textarea>
+          <div style="margin: 15px 0; display:flex; gap:10px; align-items:center;">
+            <label style="font-weight:bold; color:var(--neon-gold);">⏱️ Déverrouillage dans : </label>
+            <select id="capsule-delay" style="background:#090d16; color:white; border:2px solid var(--neon-purple); padding:10px; border-radius:8px;">
+              <option value="1">⚡ 1 Minute</option>
+              <option value="5">🔥 5 Minutes</option>
+              <option value="60">🌌 1 Heure</option>
+            </select>
           </div>
-          <div id="bubble-wrap-container" style="display:grid; grid-template-columns: repeat(10, 1fr); gap:6px; max-width:360px; margin:0 auto;" onmousedown="isSwipingBubble=true" onmouseup="isSwipingBubble=false" onmouseleave="isSwipingBubble=false" ontouchstart="isSwipingBubble=true" ontouchend="isSwipingBubble=false"></div>
+          <button class="btn" style="background:var(--neon-purple); color:white;" onclick="creerCapsule()">🔒 Verrouiller la Capsule</button>
         </div>
-
-        <div class="card">
-          <h3 style="margin-top:0;">🖼️ Pixel Art Pro</h3>
-          <div style="display:flex; gap:15px; flex-wrap:wrap; justify-content:center;">
-            <div id="pixel-grid" style="display:grid; grid-template-columns: repeat(12, 1fr); gap:2px; background:#0f172a; padding:5px; border-radius:8px;" onmousedown="isDrawingPixel=true" onmouseup="isDrawingPixel=false" onmouseleave="isDrawingPixel=false"></div>
-            <div style="display:flex; flex-direction:column; gap:8px;">
-              <span style="font-size:12px; font-weight:bold; color:#94a3b8;">Palette :</span>
-              <div id="palette-container" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:6px;"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card" style="text-align:center;">
-          <h3>🔮 Générateur de Citations IA</h3>
-          <p id="citation-display" style="font-style:italic; color:#38bdf8; min-height:35px;">"Clique ci-dessous pour créer une pensée cybernétique infinie..."</p>
-          <button class="btn" onclick="genererCitationIA()">🔮 Générer avec l'IA</button>
-        </div>
+        <h3>📦 Tes Capsules Archives</h3>
+        <div id="capsules-list"></div>
       </section>
 
-      <!-- COMMUNAUTÉ -->
-      <section id="page-community" class="page">
-        <h2>🌐 Espace Communautaire & Anonyme</h2>
+      <!-- ÎLE AUX SECRETS XL -->
+      <section id="page-secrets" class="page">
+        <h2>🏝️ L'Île aux Secrets Anonymes XL 📜</h2>
         <div class="card">
-          <h3>📊 Météo d'Humeur & Chat Communautaire</h3>
-          <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:15px;">
-            <button class="menu-btn" onclick="voterHumeur('🔥 Super')">🔥 Super</button>
-            <button class="menu-btn" onclick="voterHumeur('😎 Cool')">😎 Cool</button>
-            <button class="menu-btn" onclick="voterHumeur('😴 Fatigué')">😴 Fatigué</button>
-            <button class="menu-btn" onclick="voterHumeur('⚡ Électrique')">⚡ Électrique</button>
-            <button class="menu-btn" onclick="voterHumeur('🚀 Motivé')">🚀 Motivé</button>
-          </div>
-          <div id="community-chat-box" style="height:160px; background:#0f172a; border:1px solid #334155; border-radius:8px; padding:10px; overflow-y:auto; display:flex; flex-direction:column; gap:8px; margin-bottom:10px;">
-            <div style="background:#1e293b; padding:6px 10px; border-radius:6px; font-size:13px;">
-              <strong style="color:var(--neon-blue);">Sora_Cyber :</strong> Salut tout le monde ! L'OmniApp est géniale 🔥
-            </div>
-          </div>
-          <div style="display:flex; gap:8px;">
-            <input type="text" id="community-input" placeholder="Écris dans le chat..." onkeydown="if(event.key==='Enter') envoyerChatCommunautaire()">
-            <button class="btn" style="width:auto;" onclick="envoyerChatCommunautaire()">Envoyer</button>
-          </div>
-        </div>
-
-        <div class="card">
-          <h3>🎨 Mur de Graffiti Collectif</h3>
-          <canvas id="graffiti-canvas" width="340" height="180" style="background:#090d16; border:2px solid var(--neon-blue); border-radius:8px; display:block; margin:0 auto; cursor:crosshair; touch-action:none;"></canvas>
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
-            <span style="font-size:12px; color:#94a3b8;">Dessine avec la souris ou le doigt !</span>
-            <button class="menu-btn" onclick="effacerGraffiti()" style="padding:4px 10px; font-size:12px;">🗑️ Effacer</button>
-          </div>
-        </div>
-
-        <div class="card" style="text-align:center;">
-          <h3>⚡ Générateur de Pseudos Cyber IA</h3>
-          <p id="pseudo-generated" style="font-size:22px; font-weight:bold; color:var(--neon-purple); margin:12px 0;">Néon_Vortex_99</p>
-          <button class="btn" onclick="genererPseudoIA()">🎲 Générer un Pseudo Unique</button>
-        </div>
-
-        <div class="card">
-          <h3>📬 Boîte aux Lettres Intergalactique</h3>
-          <textarea id="letter-input" style="height:100px; margin-bottom:10px;" placeholder="Écris une pensée bienveillante..."></textarea>
-          <button class="btn" onclick="envoyerLettre()">🚀 Envoyer dans le cosmos</button>
-          <div id="received-letter" style="margin-top:10px; font-style:italic; color:#4ade80; font-size:14px; text-align:center;"></div>
-        </div>
-      </section>
-
-      <!-- TRIBUNAL DES DILEMMES -->
-      <section id="page-dilemme" class="page">
-        <h2>⚖️ Le Tribunal des Dilemmes IA</h2>
-        <div class="card" style="padding:25px;">
-          <p class="dilemme-giant-title" id="dilemme-question">Chargement du dilemme IA...</p>
-          <div id="dilemme-options" style="display: flex; flex-direction: column; gap: 15px;">
-            <button class="dilemme-giant-btn" id="opt-1" onclick="voterDilemme(1)">Option 1</button>
-            <button class="dilemme-giant-btn" id="opt-2" onclick="voterDilemme(2)">Option 2</button>
-          </div>
-          <div id="dilemme-resultats" style="display:none; text-align: center; margin-top: 25px;">
-            <p id="res-texte" style="font-weight: bold; color: #38bdf8; font-size: 20px; line-height: 1.6;"></p>
-            <button class="btn" onclick="prochainDilemmeIA()" style="background: #22c55e; color: white; margin-top:15px; font-size:16px; padding:12px;">Prochain Dilemme IA ➡️</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- ANTI-STRESS -->
-      <section id="page-vent" class="page">
-        <h2>🔥 Le Destructeur de Soucis (Anti-Stress)</h2>
-        <div class="card" style="text-align: center; padding:25px;">
-          <p style="font-size:15px; color:#94a3b8; margin-bottom:15px;">Écris ce qui te tracasse, puis anéantis-le dans le néant !</p>
-          <textarea id="vent-input" class="vent-giant-textarea" placeholder="Vide ton sac ici..."></textarea>
+          <p style="color:#94a3b8;">Dépose un secret totalement anonyme sur l'île ou lis ce que les autres joueurs ont laissé...</p>
+          <textarea id="secret-input" class="xl-textarea" style="border-color:var(--neon-blue);" placeholder="🤫 Confie ton secret anonyme..."></textarea>
           <br><br>
-          <button class="btn" style="background:#ef4444; color:white; font-size:18px; padding:15px;" onclick="detruireSouciGeant()">💥 Anéantir ce souci dans le Néant !</button>
+          <button class="btn" style="background:var(--neon-blue); color:#0f172a;" onclick="publierSecret()">🏝️ Déposer mon Secret</button>
+        </div>
+        <h3>📜 Secrets de l'Île</h3>
+        <div id="secrets-list"></div>
+      </section>
+
+      <!-- BOUTIQUE COSMÉTIQUE NÉON -->
+      <section id="page-shop" class="page">
+        <h2>🛍️ Boutique Cosmétique Néon ✨</h2>
+        <p>Dépense tes Points OMNI ⭐ débloqués en jouant pour personnaliser ton expérience !</p>
+
+        <h3>🍕 Skins de Pizza</h3>
+        <div id="pizza-skins-grid" class="shop-cosmetic-grid"></div>
+
+        <h3 style="margin-top:25px;">💥 Effets de Clic</h3>
+        <div id="click-effects-grid" class="shop-cosmetic-grid"></div>
+      </section>
+
+      <!-- QUÊTES & ROUE OMNI XL -->
+      <section id="page-wheel" class="page">
+        <h2>🎡 Quêtes Quotidiennes & Roue OMNI XL 🎁</h2>
+        <div class="card" style="text-align:center; padding:30px;">
+          <h3 style="font-size:24px; color:var(--neon-gold);">🎰 La Grande Roue de la Fortune</h3>
+          <p style="color:#94a3b8; margin-bottom:20px;">Tente ta chance quotidiennement pour remporter d'immenses trésors !</p>
+          <button class="btn" style="background:var(--neon-gold); color:#0f172a; font-size:20px; padding:18px;" onclick="ouvrirGrandeRoue()">🎡 Lancer la Grande Roue !</button>
+        </div>
+
+        <h3>🎯 Quêtes du Jour</h3>
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span>🍕 Cliquer 50 fois sur la Pizza</span>
+            <span style="color:var(--neon-gold); font-weight:bold;">+20 Points OMNI ⭐</span>
+          </div>
         </div>
       </section>
     </main>
   </div>
 
+  <!-- MODAL ROUE GEANTE -->
+  <div id="wheel-modal">
+    <h2 style="color:var(--neon-gold); font-size:32px; margin-bottom:10px;">🎡 GRANDE ROUE OMNI 🎡</h2>
+    <canvas id="wheel-canvas" width="320" height="320"></canvas>
+    <br>
+    <button class="btn" id="spin-wheel-btn" style="width:auto; font-size:20px; padding:12px 30px; background:var(--neon-gold); color:#0f172a;" onclick="tournerLaGrandeRoue()">🎰 TOURNER !</button>
+    <button class="music-btn" style="margin-top:15px;" onclick="fermerGrandeRoue()">❌ Fermer</button>
+  </div>
+
   <div id="sticky-audio-bar">
     <div style="display:flex; justify-content:space-between; align-items:center;">
       <span style="color:var(--neon-blue); font-size:13px; font-weight:bold;">📻 Cyber Radio Station</span>
-      <button class="music-btn" id="play-pause-btn" onclick="togglePlayPause()">▶️ Play Radio</button>
+      <button class="music-btn" onclick="alert('Radio active !')">▶️ Play Radio</button>
     </div>
   </div>
 
   <script>
     const state = {
-      pizzas: 0, clickPower: 1, playTimeSeconds: 0, omniPoints: 0,
-      matrixMode: false, raveMode: false, crtMode: false, titleClicks: 0
+      pizzas: 0, clickPower: 1, omniPoints: 100,
+      activeSkin: '🍕', unlockedSkins: ['🍕'],
+      activeEffect: 'cyan', unlockedEffects: ['cyan'],
+      secrets: [], capsules: [], titleClicks: 0, matrixMode: false, raveMode: false, crtMode: false
     };
 
-    let audioCtx = null;
-    function initAudioOnFirstInteraction() {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    window.addEventListener("click", initAudioOnFirstInteraction, { once: true });
-    window.addEventListener("touchstart", initAudioOnFirstInteraction, { once: true });
-
-    function jouerNote(freq, type = 'sine', duration = 0.1, vol = 0.1) {
-      if (!audioCtx) initAudioOnFirstInteraction();
-      try {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = type;
-        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
-        osc.connect(gain); gain.connect(audioCtx.destination);
-        osc.start(); osc.stop(audioCtx.currentTime + duration);
-      } catch(e){}
+    // --- CAPSULES TEMPORELLES XL ---
+    function creerCapsule() {
+      const txt = document.getElementById("capsule-text").value.trim();
+      if (!txt) return;
+      const delay = parseInt(document.getElementById("capsule-delay").value);
+      const unlockTime = Date.now() + delay * 60000;
+      state.capsules.push({ text: txt, unlockTime });
+      document.getElementById("capsule-text").value = "";
+      afficherCapsules();
+      alert("📦 Capsule verrouillée avec succès !");
     }
 
-    // --- MATRIX & RAVE ---
-    let matrixCanvas, matrixCtx, matrixInterval;
-    const matrixChars = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    let matrixDrops = [];
-
-    function initMatrixEngine() {
-      matrixCanvas = document.getElementById("matrix-canvas");
-      if (!matrixCanvas) return;
-      matrixCtx = matrixCanvas.getContext("2d");
-      matrixCanvas.width = window.innerWidth;
-      matrixCanvas.height = window.innerHeight;
-      const columns = Math.floor(matrixCanvas.width / 16);
-      matrixDrops = [];
-      for (let i = 0; i < columns; i++) matrixDrops[i] = Math.floor(Math.random() * -50);
+    function afficherCapsules() {
+      const container = document.getElementById("capsules-list");
+      container.innerHTML = state.capsules.map((c, i) => {
+        const locked = Date.now() < c.unlockTime;
+        return `<div class="card" style="border-color:${locked ? '#ef4444' : '#22c55e'};">
+          <h4>${locked ? '🔒 Capsule Verrouillée' : '🔓 Capsule Déverrouillée !'}</h4>
+          <p>${locked ? '<i>Message scellé... Revenez plus tard !</i>' : c.text}</p>
+        </div>`;
+      }).join("");
     }
 
-    function drawMatrixFrame() {
-      if (!state.matrixMode || !matrixCtx) return;
-      matrixCtx.fillStyle = "rgba(0, 0, 0, 0.05)";
-      matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
-      matrixCtx.fillStyle = "#00ff66";
-      matrixCtx.font = "14px monospace";
-      for (let i = 0; i < matrixDrops.length; i++) {
-        const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
-        matrixCtx.fillText(text, i * 16, matrixDrops[i] * 16);
-        if (matrixDrops[i] * 16 > matrixCanvas.height && Math.random() > 0.975) matrixDrops[i] = 0;
-        matrixDrops[i]++;
+    // --- SECRETS XL ---
+    function publierSecret() {
+      const txt = document.getElementById("secret-input").value.trim();
+      if (!txt) return;
+      state.secrets.unshift(txt);
+      document.getElementById("secret-input").value = "";
+      afficherSecrets();
+    }
+
+    function afficherSecrets() {
+      const container = document.getElementById("secrets-list");
+      container.innerHTML = state.secrets.map(s => `
+        <div class="card" style="border-color:var(--neon-blue);">
+          <p style="font-size:16px; margin:0;">🤫 "${s}"</p>
+        </div>
+      `).join("");
+    }
+
+    // --- BOUTIQUE COSMÉTIQUE NÉON RÉPARATION ---
+    const SKINS_LIST = [
+      { id: '🍕', name: 'Pizza Classique', cost: 0 },
+      { id: '👑', name: 'Pizza Royale', cost: 50 },
+      { id: '🌌', name: 'Pizza Cosmique', cost: 100 }
+    ];
+
+    function genererBoutiqueCosmetique() {
+      const grid = document.getElementById("pizza-skins-grid");
+      grid.innerHTML = SKINS_LIST.map(s => {
+        const owned = state.unlockedSkins.includes(s.id);
+        return `<div class="cosmetic-card ${owned ? 'owned' : ''}">
+          <span style="font-size:40px;">${s.id}</span>
+          <h4 style="margin:8px 0; font-size:15px;">${s.name}</h4>
+          ${owned ? 
+            `<button class="music-btn" onclick="equiperSkin('${s.id}')">${state.activeSkin === s.id ? 'Equipé ✅' : 'Équiper'}</button>` :
+            `<button class="btn" style="padding:6px; font-size:12px;" onclick="acheterSkin('${s.id}', ${s.cost})">Acheter (${s.cost} ⭐)</button>`
+          }
+        </div>`;
+      }).join("");
+    }
+
+    function acheterSkin(id, cost) {
+      if (state.omniPoints >= cost) {
+        state.omniPoints -= cost;
+        state.unlockedSkins.push(id);
+        equiperSkin(id);
+        genererBoutiqueCosmetique();
+      } else alert("Points OMNI ⭐ insuffisants !");
+    }
+
+    function equiperSkin(id) {
+      state.activeSkin = id;
+      document.getElementById("pizza-gigante").innerText = id;
+      genererBoutiqueCosmetique();
+    }
+
+    // --- GRANDE ROUE OMNI XL ---
+    let wheelCanvas, wheelCtx;
+    const rewards = ["+100 ⭐", "Rien... 😢", "+500 🍕", "+10 ⭐", "✨ PRESTIGE", "Rien !"];
+
+    function ouvrirGrandeRoue() {
+      document.getElementById("wheel-modal").style.display = "flex";
+      dessinerRoue();
+    }
+    function fermerGrandeRoue() {
+      document.getElementById("wheel-modal").style.display = "none";
+    }
+
+    function dessinerRoue() {
+      wheelCanvas = document.getElementById("wheel-canvas");
+      wheelCtx = wheelCanvas.getContext("2d");
+      const numOptions = rewards.length;
+      const arcSize = (2 * Math.PI) / numOptions;
+      const colors = ["#ef4444", "#38bdf8", "#a855f7", "#eab308", "#22c55e", "#ec4899"];
+
+      for (let i = 0; i < numOptions; i++) {
+        wheelCtx.beginPath();
+        wheelCtx.fillStyle = colors[i];
+        wheelCtx.moveTo(160, 160);
+        wheelCtx.arc(160, 160, 150, i * arcSize, (i + 1) * arcSize);
+        wheelCtx.fill();
+
+        wheelCtx.save();
+        wheelCtx.translate(160, 160);
+        wheelCtx.rotate(i * arcSize + arcSize / 2);
+        wheelCtx.fillStyle = "white";
+        wheelCtx.font = "bold 14px sans-serif";
+        wheelCtx.fillText(rewards[i], 60, 5);
+        wheelCtx.restore();
       }
     }
 
-    function toggleMatrix() {
-      state.matrixMode = !state.matrixMode;
-      document.body.classList.toggle("matrix-mode", state.matrixMode);
-      if (state.matrixMode) {
-        initMatrixEngine();
-        if (!matrixInterval) matrixInterval = setInterval(drawMatrixFrame, 33);
-      } else {
-        if (matrixCtx) matrixCtx.clearRect(0, 0, matrixCanvas.width, matrixCanvas.height);
-      }
+    let isSpinning = false;
+    function tournerLaGrandeRoue() {
+      if (isSpinning) return;
+      isSpinning = true;
+      const degrees = Math.floor(3600 + Math.random() * 360);
+      wheelCanvas.style.transform = `rotate(${degrees}deg)`;
+
+      setTimeout(() => {
+        isSpinning = false;
+        alert("🎉 Bravo ! Tu as remporté une récompense de la Grande Roue !");
+        fermerGrandeRoue();
+      }, 4000);
     }
 
-    function compterClicsTitre() {
-      state.titleClicks++;
-      if (state.titleClicks >= 5) {
-        state.titleClicks = 0;
-        toggleMatrix();
-        alert("💻 MODE MATRIX ACTIVÉ !");
-      }
-    }
-
-    let raveEmojiInterval;
-    function toggleRaveMode() {
-      state.raveMode = !state.raveMode;
-      document.body.classList.toggle("rave-active", state.raveMode);
-      const btn = document.getElementById("rave-btn");
-      if (btn) btn.innerText = state.raveMode ? "🟢 Mode Rave : ON" : "🔴 Mode Rave : OFF";
-      if (state.raveMode) {
-        const emojis = ["🎉", "⚡", "🍕", "🔥", "💎", "🌌"];
-        raveEmojiInterval = setInterval(() => {
-          const em = document.createElement("div");
-          em.className = "rave-emoji";
-          em.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-          em.style.left = Math.random() * 95 + "vw";
-          document.getElementById("rave-emoji-container").appendChild(em);
-          setTimeout(() => em.remove(), 2500);
-        }, 150);
-      } else {
-        clearInterval(raveEmojiInterval);
-      }
-    }
-
-    function toggleCRTMode() {
-      state.crtMode = !state.crtMode;
-      document.getElementById("crt-overlay").style.display = state.crtMode ? "block" : "none";
-    }
-
-    // --- CLICKER ---
     function cliquerPizza(e) {
       state.pizzas += state.clickPower;
       document.getElementById("score-pieces").innerText = Math.floor(state.pizzas);
-      jouerNote(300, 'square', 0.05, 0.05);
-
-      const pizzaEl = document.getElementById("pizza-gigante");
-      const container = document.getElementById("pizza-container");
-      if (pizzaEl && container) {
-        pizzaEl.classList.add("clicked");
-        setTimeout(() => pizzaEl.classList.remove("clicked"), 80);
-      }
     }
-
-    // --- IA ROBOT & CITATIONS ---
-    function envoyerMessageIA() {
-      const input = document.getElementById("ai-user-input");
-      const text = input.value.trim();
-      if (!text) return;
-      const chatBox = document.getElementById("ai-chat-box");
-      const userMsg = document.createElement("div");
-      userMsg.style.cssText = "background:var(--neon-blue); color:#0f172a; font-weight:bold; padding:8px 12px; border-radius:8px; align-self:flex-end; max-width:80%; font-size:13px;";
-      userMsg.innerText = text;
-      chatBox.appendChild(userMsg);
-      input.value = "";
-
-      setTimeout(() => {
-        const aiMsg = document.createElement("div");
-        aiMsg.style.cssText = "background:#1e293b; padding:8px 12px; border-radius:8px; align-self:flex-start; max-width:80%; font-size:13px;";
-        aiMsg.innerHTML = `🤖 <strong>Cyber-Bot :</strong> J'ai bien reçu "${text}". Continue comme ça !`;
-        chatBox.appendChild(aiMsg);
-        chatBox.scrollTop = chatBox.scrollHeight;
-        jouerNote(600, 'sine', 0.1, 0.1);
-      }, 500);
-    }
-
-    const aiSubjects = ["L'intelligence artificielle", "La matrice néon", "Le réseau quantique", "La pizza sacrée"];
-    const aiVerbs = ["illumine", "transcende", "recalibre", "harmonise"];
-    const aiContexts = ["les réalités virtuelles.", "le futur du Cyber-Espace.", "les possibilités de l'OmniApp."];
-
-    function genererCitationIA() {
-      const sub = aiSubjects[Math.floor(Math.random() * aiSubjects.length)];
-      const verb = aiVerbs[Math.floor(Math.random() * aiVerbs.length)];
-      const ctx = aiContexts[Math.floor(Math.random() * aiContexts.length)];
-      document.getElementById("citation-display").innerText = `« ${sub} ${verb} ${ctx} »`;
-      jouerNote(500, 'triangle', 0.15, 0.1);
-    }
-
-    // --- SIMON SAYS ---
-    let simonSeq = [], simonUserStep = 0, simonPlaying = false;
-    function demarrerSimonGame() {
-      simonSeq = [Math.floor(Math.random() * 4)];
-      simonUserStep = 0;
-      jouerSequenceSimon();
-    }
-    function jouerSequenceSimon() {
-      simonPlaying = false;
-      document.getElementById("simon-status").innerText = "👀 OBSERVE LA SÉQUENCE...";
-      let i = 0;
-      const interval = setInterval(() => {
-        flasherBoutonSimon(simonSeq[i]);
-        i++;
-        if (i >= simonSeq.length) {
-          clearInterval(interval);
-          setTimeout(() => { simonPlaying = true; document.getElementById("simon-status").innerText = "👉 À TON TOUR !"; }, 500);
-        }
-      }, 700);
-    }
-    function flasherBoutonSimon(id) {
-      const btn = document.getElementById("simon-" + id);
-      btn.style.opacity = "0.3";
-      jouerNote(200 + id * 100, 'sine', 0.2, 0.2);
-      setTimeout(() => { btn.style.opacity = "1"; }, 300);
-    }
-    function cliquerSimon(id) {
-      if (!simonPlaying) return;
-      flasherBoutonSimon(id);
-      if (id === simonSeq[simonUserStep]) {
-        simonUserStep++;
-        if (simonUserStep >= simonSeq.length) {
-          simonUserStep = 0;
-          simonSeq.push(Math.floor(Math.random() * 4));
-          setTimeout(jouerSequenceSimon, 800);
-        }
-      } else {
-        alert("💥 Erreur Simon ! Score : " + (simonSeq.length - 1));
-        simonPlaying = false;
-        document.getElementById("simon-status").innerText = "🔴 Appuie sur Jouer";
-      }
-    }
-
-    // --- PAPIER BULLE & PIXEL ART ---
-    let isSwipingBubble = false;
-    function initPapierBulle() {
-      const container = document.getElementById("bubble-wrap-container");
-      container.innerHTML = "";
-      for (let i = 0; i < 40; i++) {
-        const bubble = document.createElement("div");
-        bubble.className = "bubble-item";
-        const pop = () => {
-          if (!bubble.classList.contains("popped")) {
-            bubble.classList.add("popped");
-            jouerNote(400 + Math.random() * 300, 'sine', 0.05, 0.15);
-          }
-        };
-        bubble.onmouseover = () => { if (isSwipingBubble) pop(); };
-        bubble.onmousedown = pop;
-        bubble.ontouchmove = (e) => {
-          const touch = e.touches[0];
-          const elem = document.elementFromPoint(touch.clientX, touch.clientY);
-          if (elem && elem.classList.contains("bubble-item")) {
-            elem.classList.add("popped");
-            jouerNote(400 + Math.random() * 300, 'sine', 0.05, 0.15);
-          }
-        };
-        container.appendChild(bubble);
-      }
-    }
-
-    let currentColor = "#38bdf8";
-    let isDrawingPixel = false;
-    const colorsList = ["#38bdf8", "#ef4444", "#22c55e", "#eab308", "#a855f7", "#ec4899", "#ffffff", "#0f172a"];
-
-    function initPixelArtPro() {
-      const palette = document.getElementById("palette-container");
-      palette.innerHTML = "";
-      colorsList.forEach((c, idx) => {
-        const swatch = document.createElement("div");
-        swatch.className = "color-swatch" + (idx === 0 ? " active" : "");
-        swatch.style.background = c;
-        if(c === "#0f172a") swatch.style.border = "1px solid #334155";
-        swatch.onclick = () => {
-          document.querySelectorAll(".color-swatch").forEach(s => s.classList.remove("active"));
-          swatch.classList.add("active");
-          currentColor = c;
-        };
-        palette.appendChild(swatch);
-      });
-
-      const grid = document.getElementById("pixel-grid");
-      grid.innerHTML = "";
-      for (let i = 0; i < 144; i++) {
-        const cell = document.createElement("div");
-        cell.style.width = "18px"; cell.style.height = "18px";
-        cell.style.background = "#1e293b"; cell.style.borderRadius = "2px";
-        cell.style.cursor = "pointer";
-        const paint = () => { cell.style.background = currentColor; };
-        cell.onmousedown = paint;
-        cell.onmouseenter = () => { if (isDrawingPixel) paint(); };
-        grid.appendChild(cell);
-      }
-    }
-
-    // --- GRAFFITI ---
-    let gCanvas, gCtx, isDrawing = false;
-    function initGraffiti() {
-      gCanvas = document.getElementById("graffiti-canvas");
-      if (!gCanvas) return;
-      gCtx = gCanvas.getContext("2d");
-      gCtx.strokeStyle = "#38bdf8";
-      gCtx.lineWidth = 3;
-      gCtx.lineCap = "round";
-
-      const startDraw = (e) => { isDrawing = true; draw(e); };
-      const stopDraw = () => { isDrawing = false; gCtx.beginPath(); };
-      const draw = (e) => {
-        if (!isDrawing) return;
-        const rect = gCanvas.getBoundingClientRect();
-        const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
-        const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
-        gCtx.lineTo(x, y);
-        gCtx.stroke();
-        gCtx.beginPath();
-        gCtx.moveTo(x, y);
-      };
-
-      gCanvas.onmousedown = startDraw; gCanvas.onmouseup = stopDraw; gCanvas.onmousemove = draw;
-      gCanvas.ontouchstart = startDraw; gCanvas.ontouchend = stopDraw; gCanvas.ontouchmove = draw;
-    }
-    function effacerGraffiti() { if (gCtx) gCtx.clearRect(0, 0, gCanvas.width, gCanvas.height); }
-
-    // --- COMMUNAUTÉ, PSEUDOS & LETTRES ---
-    function envoyerChatCommunautaire() {
-      const input = document.getElementById("community-input");
-      const text = input.value.trim();
-      if (!text) return;
-      const chatBox = document.getElementById("community-chat-box");
-      const msg = document.createElement("div");
-      msg.style.cssText = "background:#1e293b; padding:6px 10px; border-radius:6px; font-size:13px;";
-      msg.innerHTML = `<strong style="color:#22c55e;">Moi :</strong> ${text}`;
-      chatBox.appendChild(msg);
-      input.value = "";
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    function voterHumeur(humeur) { alert(`Humeur enregistrée : ${humeur} !`); }
-
-    const aiPrefixes = ["Néon", "Cyber", "Vortex", "Quantum", "Shadow", "Hyper", "Alpha", "Omega"];
-    const aiSuffixes = ["Phénix", "Rider", "Hacker", "Viper", "Titan", "Spectre", "Pizzaiolo", "Runner"];
-    const aiTitles = ["👑", "⚡", "🔥", "🛸", "🤖", "🌌"];
-
-    function genererPseudoIA() {
-      const pre = aiPrefixes[Math.floor(Math.random() * aiPrefixes.length)];
-      const suf = aiSuffixes[Math.floor(Math.random() * aiSuffixes.length)];
-      const title = aiTitles[Math.floor(Math.random() * aiTitles.length)];
-      const num = Math.floor(Math.random() * 999) + 1;
-      document.getElementById("pseudo-generated").innerText = `${title} ${pre}_${suf}_${num}`;
-    }
-
-    function envoyerLettre() {
-      const input = document.getElementById("letter-input");
-      if (!input.value.trim()) return;
-      input.value = "";
-      document.getElementById("received-letter").innerText = "📩 Message envoyé dans l'espace cosmique !";
-    }
-
-    // --- DILEMMES IA & ANTI-STRESS ---
-    const dilemmesIADatabase = [
-      { q: "🥐 Quel est le vrai nom sacré de cette viennoiserie ?", o1: "🥐 Pain au Chocolat", o2: "🍫 Chocolatine" },
-      { q: "⚡ Quel pouvoir cyberpunk choisis-tu d'incarner ?", o1: "🦅 Voler dans les airs", o2: "👻 Invisibilité totale" },
-      { q: "🍔 Que préfères-tu manger gratuitement à vie ?", o1: "🍕 Pizzas à volonté", o2: "🍔 Burgers gastronomiques" }
-    ];
-    let currentDilemmeIndex = 0;
-
-    function chargerDilemmeIA() {
-      const d = dilemmesIADatabase[currentDilemmeIndex % dilemmesIADatabase.length];
-      document.getElementById("dilemme-question").innerText = "⚖️ " + d.q;
-      document.getElementById("opt-1").innerText = d.o1;
-      document.getElementById("opt-2").innerText = d.o2;
-    }
-
-    function voterDilemme(choix) {
-      const p1 = Math.floor(Math.random() * 40) + 30;
-      document.getElementById("dilemme-options").style.display = "none";
-      document.getElementById("dilemme-resultats").style.display = "block";
-      document.getElementById("res-texte").innerHTML = `📊 Résultats :<br><span style="color:#38bdf8">Choix 1 : ${p1}%</span> | <span style="color:#eab308">Choix 2 : ${100 - p1}%</span>`;
-    }
-
-    function prochainDilemmeIA() {
-      currentDilemmeIndex++;
-      document.getElementById("dilemme-options").style.display = "flex";
-      document.getElementById("dilemme-resultats").style.display = "none";
-      chargerDilemmeIA();
-    }
-
-    function detruireSouciGeant() {
-      const textarea = document.getElementById("vent-input");
-      if (!textarea.value.trim()) return;
-      textarea.style.transition = "transform 0.8s ease, opacity 0.8s ease";
-      textarea.style.transform = "scale(0) rotate(720deg)";
-      textarea.style.opacity = "0";
-      setTimeout(() => {
-        textarea.value = "";
-        textarea.style.transform = "none";
-        textarea.style.opacity = "1";
-        alert("🌌 Ton souci a été définitivement anéanti dans le néant !");
-      }, 800);
-    }
-
-    function togglePlayPause() { alert("Radio Cyber activée !"); }
 
     function switchTab(tabId) {
       document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
@@ -761,11 +433,9 @@
     }
 
     window.onload = () => {
-      initMatrixEngine();
-      initPapierBulle();
-      initPixelArtPro();
-      initGraffiti();
-      chargerDilemmeIA();
+      genererBoutiqueCosmetique();
+      afficherCapsules();
+      afficherSecrets();
     };
   </script>
 </body>
