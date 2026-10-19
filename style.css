@@ -21,16 +21,22 @@ body {
   background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
   background-size: 100% 2px, 3px 100%;
   pointer-events: none;
-  z-index: 99;
+  z-index: 999;
   display: none;
 }
 
-/* CANVAS MATRIX */
+/* CANVAS MATRIX HACKER */
 #matrix-canvas-container {
   position: fixed;
   top: 0; left: 0; width: 100vw; height: 100vh;
   pointer-events: none;
   z-index: -1;
+}
+
+#matrix-canvas {
+  width: 100vw;
+  height: 100vh;
+  display: block;
 }
 
 body.matrix-mode {
@@ -49,14 +55,28 @@ body.matrix-mode {
 
 body.rave-active #rave-background-layer {
   opacity: 1;
-  animation: raveRainbow 0.8s infinite alternate;
+  animation: raveRainbow 0.6s infinite alternate;
 }
 
 @keyframes raveRainbow {
   0% { background: #ef4444; }
-  33% { background: #38bdf8; }
-  66% { background: #a855f7; }
+  25% { background: #eab308; }
+  50% { background: #38bdf8; }
+  75% { background: #a855f7; }
   100% { background: #22c55e; }
+}
+
+.rave-emoji {
+  position: fixed;
+  font-size: 30px;
+  pointer-events: none;
+  z-index: 99;
+  animation: fallEmoji 2.5s linear forwards;
+}
+
+@keyframes fallEmoji {
+  0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(105vh) rotate(360deg); opacity: 0; }
 }
 
 /* LAYOUT CONTAINER */
@@ -65,6 +85,19 @@ body.rave-active #rave-background-layer {
   margin: 0 auto;
   padding: 20px;
   padding-bottom: 90px;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+header h1 {
+  font-size: 32px;
+  margin: 0;
+  color: var(--neon-blue);
+  cursor: pointer;
+  text-shadow: 0 0 10px var(--neon-blue);
 }
 
 /* MENU BOUTONS */
@@ -99,7 +132,7 @@ body.rave-active #rave-background-layer {
 
 /* CARTE CONTAINER */
 .card {
-  background: rgba(30, 41, 59, 0.7);
+  background: rgba(30, 41, 59, 0.85);
   border: 1px solid #334155;
   border-radius: 12px;
   padding: 16px;
@@ -134,8 +167,9 @@ body.rave-active #rave-background-layer {
   position: absolute;
   color: #eab308;
   font-weight: bold;
-  font-size: 24px;
+  font-size: 26px;
   pointer-events: none;
+  z-index: 10;
   animation: floatUp 0.6s ease-out forwards;
 }
 
@@ -149,6 +183,7 @@ body.rave-active #rave-background-layer {
   width: 8px; height: 8px;
   border-radius: 50%;
   pointer-events: none;
+  z-index: 9;
   animation: sparkleAnim 0.5s ease-out forwards;
 }
 
@@ -186,7 +221,7 @@ body.rave-active #rave-background-layer {
   border-top: 1px solid var(--neon-purple);
   padding: 8px 15px;
   backdrop-filter: blur(10px);
-  z-index: 90;
+  z-index: 900;
 }
 
 .music-btn {
@@ -196,4 +231,25 @@ body.rave-active #rave-background-layer {
   padding: 5px 10px;
   border-radius: 6px;
   cursor: pointer;
+}
+
+.btn {
+  background: var(--neon-blue);
+  color: #0f172a;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+}
+
+textarea, input[type="text"] {
+  width: 100%;
+  background: #0f172a;
+  border: 1px solid #334155;
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  box-sizing: border-border-box;
 }
