@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OMNI-APP - Cyberpunk Mega Edition Ultime</title>
+  <title>OMNI-APP - Cyberpunk Ultimate Mega Edition</title>
   <style>
     :root {
       --neon-blue: #38bdf8;
@@ -14,14 +14,26 @@
       --bg-dark: #0f172a;
     }
 
+    /* DESACTIVATION TOTALE DE LA SELECTION DE TEXTE POUR ÉVITER LE BLEU MOCHE */
+    *, *::before, *::after {
+      user-select: none !important;
+      -webkit-user-select: none !important;
+      -moz-user-select: none !important;
+      -ms-user-select: none !important;
+      -webkit-touch-callout: none !important;
+    }
+
+    input, textarea {
+      user-select: text !important;
+      -webkit-user-select: text !important;
+    }
+
     body {
       margin: 0; padding: 0;
       background-color: var(--bg-dark);
       color: white;
       font-family: 'Segoe UI', system-ui, sans-serif;
       overflow-x: hidden;
-      user-select: none;
-      -webkit-user-select: none;
     }
 
     #crt-overlay {
@@ -66,21 +78,22 @@
       max-width: 950px; margin: 0 auto; padding: 20px; padding-bottom: 120px;
     }
 
-    header { text-align: center; margin-bottom: 25px; }
+    header { text-align: center; margin-bottom: 30px; margin-top: 10px; }
+    
+    /* TITRE OMNIAPP GEANT ET IMPOSSIBLE A SURLIGNER */
     header h1 {
-      font-size: 52px; margin: 0; color: var(--neon-blue);
+      font-size: 64px; margin: 0; color: var(--neon-blue);
       cursor: pointer; text-shadow: 0 0 20px var(--neon-blue), 0 0 40px var(--neon-purple);
-      user-select: none; -webkit-user-select: none;
-      letter-spacing: 2px;
+      letter-spacing: 3px; font-weight: 900; display: inline-block;
     }
 
     .main-menu {
-      display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; justify-content: center;
+      display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 25px; justify-content: center;
     }
 
     .menu-btn {
       background: #1e293b; border: 2px solid var(--neon-blue); color: white;
-      padding: 10px 16px; border-radius: 10px; cursor: pointer; font-weight: bold;
+      padding: 9px 14px; border-radius: 10px; cursor: pointer; font-weight: bold;
       transition: all 0.2s ease; box-shadow: 0 0 8px rgba(56, 189, 248, 0.2);
     }
     .menu-btn:hover, .menu-btn.active {
@@ -96,10 +109,10 @@
       border: 2px solid #334155;
       border-radius: 16px; padding: 24px; margin-bottom: 22px;
       backdrop-filter: blur(12px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(56, 189, 248, 0.05);
-      transition: border-color 0.3s ease;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
     }
 
+    /* PIZZA CLICKER & BOUTIQUE */
     #pizza-rotation-wrapper {
       display: inline-block; animation: spinPizza 20s linear infinite;
     }
@@ -107,8 +120,7 @@
       from { transform: rotate(0deg); } to { transform: rotate(360deg); }
     }
     #pizza-gigante {
-      font-size: 120px; cursor: pointer; user-select: none;
-      transition: transform 0.08s ease; display: inline-block;
+      font-size: 120px; cursor: pointer; transition: transform 0.08s ease; display: inline-block;
       filter: drop-shadow(0 0 15px rgba(234, 179, 8, 0.4));
     }
     #pizza-gigante.clicked { transform: scale(0.85); }
@@ -122,14 +134,39 @@
     }
     .shop-item.available { border-color: var(--neon-blue); }
 
+    /* CARTES RARES (BOOSTER POKEMON) */
+    .booster-pack {
+      width: 180px; height: 260px; background: linear-gradient(135deg, #a855f7, #ec4899);
+      border: 4px solid var(--neon-gold); border-radius: 16px; margin: 20px auto;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      cursor: pointer; box-shadow: 0 0 25px rgba(234, 179, 8, 0.5);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .booster-pack:hover { transform: scale(1.05) rotate(2deg); box-shadow: 0 0 40px var(--neon-gold); }
+
+    .card-reveal-grid {
+      display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 20px;
+    }
+    .card-item {
+      width: 130px; height: 190px; background: #1e293b; border: 3px solid var(--neon-blue);
+      border-radius: 12px; display: flex; flex-direction: column; justify-content: center;
+      align-items: center; cursor: pointer; transition: transform 0.3s;
+    }
+    .card-item:hover { transform: translateY(-10px); border-color: var(--neon-gold); }
+
+    /* ZONES XL */
     .xl-textarea {
-      width: 100%; height: 220px; background: #090d16;
+      width: 100%; height: 200px; background: #090d16;
       border: 2px solid var(--neon-purple); color: white;
       padding: 16px; font-size: 16px; border-radius: 12px;
       box-sizing: border-box; resize: vertical;
-      box-shadow: inset 0 0 15px rgba(168, 85, 247, 0.2);
+    }
+    .vent-giant-textarea {
+      width: 100%; height: 250px; background: #090d16; border: 2px solid #ef4444;
+      color: white; padding: 16px; font-size: 16px; border-radius: 14px; box-sizing: border-box; resize: vertical;
     }
 
+    /* ROUE XL */
     #wheel-modal {
       display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
       background: rgba(15, 23, 42, 0.96); z-index: 2000;
@@ -141,17 +178,19 @@
       box-shadow: 0 0 40px var(--neon-gold); transition: transform 4s cubic-bezier(0.15, 0.9, 0.15, 1);
     }
 
+    /* BOUTIQUE NÉON */
     .shop-cosmetic-grid {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px;
     }
     .cosmetic-card {
       background: #1e293b; border: 2px solid #334155; border-radius: 14px;
-      padding: 18px; text-align: center; transition: all 0.2s;
+      padding: 18px; text-align: center;
     }
     .cosmetic-card.owned { border-color: var(--neon-green); box-shadow: 0 0 15px rgba(34, 197, 94, 0.3); }
 
+    /* CRÉATIF CHILL */
     .color-swatch {
-      width: 30px; height: 30px; border-radius: 8px; cursor: pointer;
+      width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
       border: 2px solid transparent; transition: transform 0.1s;
     }
     .color-swatch.active { border-color: white; transform: scale(1.15); box-shadow: 0 0 10px white; }
@@ -165,20 +204,17 @@
       background: #1e293b; border-color: #334155; transform: scale(0.85); box-shadow: none;
     }
 
+    /* DILEMMES XL */
     .dilemme-giant-title {
-      font-size: 26px; font-weight: bold; text-align: center; color: var(--neon-blue); margin-bottom: 20px;
+      font-size: 32px; font-weight: 900; text-align: center; color: var(--neon-blue); margin-bottom: 30px; line-height: 1.4;
     }
     .dilemme-giant-btn {
-      font-size: 18px; padding: 18px; border-radius: 14px; border: 2px solid var(--neon-purple);
+      font-size: 22px; padding: 25px; border-radius: 16px; border: 3px solid var(--neon-purple);
       background: #1e293b; color: white; cursor: pointer; transition: transform 0.1s, background 0.2s;
       width: 100%; text-align: center; font-weight: bold;
+      box-shadow: 0 6px 20px rgba(168, 85, 247, 0.3);
     }
-    .dilemme-giant-btn:hover { background: var(--neon-purple); transform: scale(1.02); }
-
-    .vent-giant-textarea {
-      width: 100%; height: 250px; background: #090d16; border: 2px solid #ef4444;
-      color: white; padding: 16px; font-size: 16px; border-radius: 14px; box-sizing: border-box; resize: vertical;
-    }
+    .dilemme-giant-btn:hover { background: var(--neon-purple); transform: scale(1.02); box-shadow: 0 0 30px var(--neon-purple); }
 
     #sticky-audio-bar {
       position: fixed; bottom: 0; left: 0; right: 0; background: rgba(15, 23, 42, 0.95);
@@ -190,7 +226,7 @@
     }
     .btn {
       background: var(--neon-blue); color: #0f172a; border: none;
-      padding: 12px 24px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; font-size: 16px;
+      padding: 14px 24px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; font-size: 16px;
       box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
     }
     textarea, input[type="text"] {
@@ -214,17 +250,18 @@
   <div class="app-container">
     <header>
       <h1 id="main-title" onclick="compterClicsTitre()">🚀 OMNI-APP</h1>
-      <p id="user-title-tag" style="color:var(--neon-blue); font-weight:bold; letter-spacing:1px;">🌌 Cyberpunk Social Mega Edition — 👑 Débutant Cyber</p>
+      <p id="user-title-tag" style="color:var(--neon-blue); font-weight:bold;">🌌 Cyberpunk Mega Edition Ultime — 👑 Débutant Cyber</p>
     </header>
 
     <nav class="main-menu">
       <button id="btn-home" class="menu-btn active" onclick="switchTab('home')">🏠 Profil</button>
       <button id="btn-clicker" class="menu-btn" onclick="switchTab('clicker')">🎮 Clicker</button>
+      <button id="btn-cards" class="menu-btn" onclick="switchTab('cards')">🎴 Cartes Rares</button>
       <button id="btn-arcade" class="menu-btn" onclick="switchTab('arcade')">🕹️ Arcade</button>
       <button id="btn-pets" class="menu-btn" onclick="switchTab('pets')">🤖 Robot IA</button>
       <button id="btn-sandbox" class="menu-btn" onclick="switchTab('sandbox')">🎨 Créatif</button>
       <button id="btn-community" class="menu-btn" onclick="switchTab('community')">🌐 Communauté</button>
-      <button id="btn-dilemme" class="menu-btn" onclick="switchTab('dilemme')">⚖️ Dilemmes</button>
+      <button id="btn-dilemme" class="menu-btn" onclick="switchTab('dilemme')">⚖️ Dilemmes XL</button>
       <button id="btn-capsule" class="menu-btn" onclick="switchTab('capsule')">⏳ Capsule XL</button>
       <button id="btn-secrets" class="menu-btn" onclick="switchTab('secrets')">🏝️ Secrets XL</button>
       <button id="btn-vent" class="menu-btn" onclick="switchTab('vent')">🔥 Anti-Stress</button>
@@ -233,7 +270,7 @@
     </nav>
 
     <main class="content">
-      <!-- PROFIL -->
+      <!-- 1. PROFIL -->
       <section id="page-home" class="page active">
         <div class="card" style="display:flex; align-items:center; gap:20px;">
           <div id="profile-avatar" style="font-size:55px; cursor:pointer;" onclick="changerAvatar()">🤖</div>
@@ -247,7 +284,7 @@
         </div>
       </section>
 
-      <!-- PIZZA CLICKER -->
+      <!-- 2. CLICKER -->
       <section id="page-clicker" class="page">
         <div class="card" style="text-align: center;">
           <h3 style="font-size:28px; color:var(--neon-gold);">💰 <span id="score-pieces">0</span> Pizzas</h3>
@@ -262,7 +299,36 @@
         <div id="shop-container" class="shop-grid"></div>
       </section>
 
-      <!-- ARCADE HUB -->
+      <!-- 3. CARTES RARES (BOOSTER) -->
+      <section id="page-cards" class="page">
+        <h2>🎴 Cartes Rares (Ouverture de Booster)</h2>
+        <div class="card" style="text-align:center;">
+          <p style="color:#94a3b8;">Ouvre un booster cosmique et choisis une carte dans le paquet !</p>
+          
+          <div id="booster-container">
+            <div class="booster-pack" onclick="ouvrirBooster()">
+              <span style="font-size:50px;">📦</span>
+              <span style="font-weight:bold; margin-top:10px; color:white;">OUVRIR LE BOOSTER</span>
+            </div>
+          </div>
+
+          <div id="cards-selection-container" style="display:none;">
+            <h3 style="color:var(--neon-gold);">👉 Choisis une carte dans le paquet :</h3>
+            <div class="card-reveal-grid">
+              <div class="card-item" onclick="revelerCarte(1)"><span style="font-size:40px;">❓</span></div>
+              <div class="card-item" onclick="revelerCarte(2)"><span style="font-size:40px;">❓</span></div>
+              <div class="card-item" onclick="revelerCarte(3)"><span style="font-size:40px;">❓</span></div>
+            </div>
+          </div>
+
+          <div id="card-result" style="display:none; margin-top:20px;">
+            <h3 id="card-result-name" style="color:var(--neon-blue); font-size:24px;"></h3>
+            <button class="btn" style="width:auto;" onclick="reinitialiserBooster()">🔄 Rouvrir un autre paquet</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. ARCADE HUB -->
       <section id="page-arcade" class="page">
         <h2>🕹️ Arcade Hub & Simon Says</h2>
         <div class="card" style="text-align: center;">
@@ -277,30 +343,30 @@
         </div>
       </section>
 
-      <!-- ROBOT IA -->
+      <!-- 5. ROBOT IA -->
       <section id="page-pets" class="page">
-        <h2>🤖 Robot Cyber-Bot (Intelligence Artificielle)</h2>
+        <h2>🤖 Robot Cyber-Bot (Assistant IA)</h2>
         <div class="card" style="display:flex; flex-direction:column; gap:12px;">
           <div style="display:flex; align-items:center; gap:15px;">
             <span style="font-size:50px;">🤖</span>
             <div>
               <h3 style="margin:0; color:var(--neon-blue);">Cyber-Bot Assistant IA</h3>
-              <p style="margin:0; font-size:13px; color:#94a3b8;">Pose-moi des questions ou demande-moi des conseils !</p>
+              <p style="margin:0; font-size:13px; color:#94a3b8;">Pose-moi des questions ou demande-moi de l'aide !</p>
             </div>
           </div>
           <div id="ai-chat-box" style="height:200px; background:#090d16; border:1px solid #334155; border-radius:10px; padding:12px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;">
             <div style="background:#1e293b; padding:8px 12px; border-radius:8px; align-self:flex-start; max-width:80%; font-size:13px;">
-              🤖 <strong>Cyber-Bot :</strong> Salut ! Je suis ton assistant IA. Prêt à dominer l'Omni-App ?
+              🤖 <strong>Cyber-Bot :</strong> Salut ! Je suis ton assistant IA. Prêt à explorer l'OmniApp ?
             </div>
           </div>
           <div style="display:flex; gap:8px;">
-            <input type="text" id="ai-user-input" placeholder="Écris à ton familier IA..." onkeydown="if(event.key==='Enter') envoyerMessageIA()">
+            <input type="text" id="ai-user-input" placeholder="Écris un message à ton Robot IA..." onkeydown="if(event.key==='Enter') envoyerMessageIA()">
             <button class="btn" style="width:auto;" onclick="envoyerMessageIA()">Envoyer</button>
           </div>
         </div>
       </section>
 
-      <!-- CRÉATIF CHILL -->
+      <!-- 6. CREATIF & CHILL -->
       <section id="page-sandbox" class="page">
         <h2>🎨 Zone Créative & Chill</h2>
         <div class="card">
@@ -312,11 +378,11 @@
         </div>
 
         <div class="card">
-          <h3 style="margin-top:0; color:var(--neon-pink);">🖼️ Pixel Art Pro</h3>
+          <h3 style="margin-top:0; color:var(--neon-pink);">🖼️ Pixel Art Pro (Palette dédiée & Glissement)</h3>
           <div style="display:flex; gap:20px; flex-wrap:wrap; justify-content:center; align-items:center;">
             <div id="pixel-grid" style="display:grid; grid-template-columns: repeat(12, 1fr); gap:2px; background:#090d16; padding:8px; border-radius:10px; border:1px solid #334155;" onmousedown="isDrawingPixel=true" onmouseup="isDrawingPixel=false" onmouseleave="isDrawingPixel=false"></div>
             <div style="display:flex; flex-direction:column; gap:8px;">
-              <span style="font-size:12px; font-weight:bold; color:#94a3b8;">Palette de Couleurs :</span>
+              <span style="font-size:12px; font-weight:bold; color:#94a3b8;">Palette :</span>
               <div id="palette-container" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:8px;"></div>
             </div>
           </div>
@@ -324,12 +390,12 @@
 
         <div class="card" style="text-align:center;">
           <h3 style="color:var(--neon-purple);">🔮 Générateur de Citations IA</h3>
-          <p id="citation-display" style="font-style:italic; color:var(--neon-blue); min-height:40px; font-size:16px;">"Clique ci-dessous pour créer une pensée cybernétique infinie..."</p>
+          <p id="citation-display" style="font-style:italic; color:var(--neon-blue); min-height:40px; font-size:16px;">"Clique ci-dessous pour générer une citation rétro-futuriste infinie..."</p>
           <button class="btn" style="background:var(--neon-purple); color:white; width:auto;" onclick="genererCitationIA()">🔮 Générer avec l'IA</button>
         </div>
       </section>
 
-      <!-- COMMUNAUTÉ -->
+      <!-- 7. COMMUNAUTÉ -->
       <section id="page-community" class="page">
         <h2>🌐 Espace Communautaire & Anonyme</h2>
         <div class="card">
@@ -360,31 +426,25 @@
             <button class="menu-btn" onclick="effacerGraffiti()" style="padding:6px 12px; font-size:12px;">🗑️ Effacer</button>
           </div>
         </div>
-
-        <div class="card" style="text-align:center;">
-          <h3 style="color:var(--neon-purple);">⚡ Générateur de Pseudos Cyber IA</h3>
-          <p id="pseudo-generated" style="font-size:24px; font-weight:bold; color:var(--neon-purple); margin:15px 0;">Néon_Vortex_99</p>
-          <button class="btn" style="background:var(--neon-purple); color:white; width:auto;" onclick="genererPseudoIA()">🎲 Générer un Pseudo Unique</button>
-        </div>
       </section>
 
-      <!-- TRIBUNAL DES DILEMMES -->
+      <!-- 8. DILEMMES XL -->
       <section id="page-dilemme" class="page">
-        <h2>⚖️ Le Tribunal des Dilemmes IA</h2>
-        <div class="card" style="padding:30px;">
+        <h2>⚖️ Le Tribunal des Dilemmes (XL)</h2>
+        <div class="card" style="padding:40px 25px;">
           <p class="dilemme-giant-title" id="dilemme-question">Chargement du dilemme IA...</p>
-          <div id="dilemme-options" style="display: flex; flex-direction: column; gap: 15px;">
+          <div id="dilemme-options" style="display: flex; flex-direction: column; gap: 20px;">
             <button class="dilemme-giant-btn" id="opt-1" onclick="voterDilemme(1)">Option 1</button>
             <button class="dilemme-giant-btn" id="opt-2" onclick="voterDilemme(2)">Option 2</button>
           </div>
-          <div id="dilemme-resultats" style="display:none; text-align: center; margin-top: 25px;">
-            <p id="res-texte" style="font-weight: bold; color: var(--neon-blue); font-size: 22px; line-height: 1.6;"></p>
+          <div id="dilemme-resultats" style="display:none; text-align: center; margin-top: 30px;">
+            <p id="res-texte" style="font-weight: bold; color: var(--neon-blue); font-size: 24px; line-height: 1.6;"></p>
             <button class="btn" onclick="prochainDilemmeIA()" style="background: var(--neon-green); color: white; margin-top:20px; font-size:18px; padding:15px;">Prochain Dilemme IA ➡️</button>
           </div>
         </div>
       </section>
 
-      <!-- CAPSULE TEMPORELLE XL -->
+      <!-- 9. CAPSULE XL -->
       <section id="page-capsule" class="page">
         <h2>⏳ Capsule Temporelle XL 📦</h2>
         <div class="card">
@@ -404,7 +464,7 @@
         <div id="capsules-list"></div>
       </section>
 
-      <!-- ÎLE AUX SECRETS XL -->
+      <!-- 10. SECRETS XL -->
       <section id="page-secrets" class="page">
         <h2>🏝️ L'Île aux Secrets Anonymes XL 📜</h2>
         <div class="card">
@@ -417,7 +477,7 @@
         <div id="secrets-list"></div>
       </section>
 
-      <!-- ANTI-STRESS -->
+      <!-- 11. ANTI-STRESS -->
       <section id="page-vent" class="page">
         <h2>🔥 Le Destructeur de Soucis (Anti-Stress)</h2>
         <div class="card" style="text-align: center; padding:30px;">
@@ -428,7 +488,7 @@
         </div>
       </section>
 
-      <!-- BOUTIQUE COSMÉTIQUE NÉON -->
+      <!-- 12. BOUTIQUE NÉON -->
       <section id="page-shop" class="page">
         <h2>🛍️ Boutique Cosmétique Néon ✨</h2>
         <p style="color:#94a3b8;">Dépense tes Points OMNI ⭐ débloqués en jouant pour personnaliser ton expérience cybernétique !</p>
@@ -440,19 +500,13 @@
         <div id="click-effects-grid" class="shop-cosmetic-grid"></div>
       </section>
 
-      <!-- QUÊTES & ROUE OMNI XL -->
+      <!-- 13. ROUE XL -->
       <section id="page-wheel" class="page">
         <h2>🎡 Quêtes Quotidiennes & Roue OMNI XL 🎁</h2>
         <div class="card" style="text-align:center; padding:30px;">
           <h3 style="font-size:26px; color:var(--neon-gold);">🎰 La Grande Roue de la Fortune</h3>
           <p style="color:#94a3b8; margin-bottom:20px; font-size:15px;">Tente ta chance quotidiennement pour remporter d'immenses trésors cybernétiques !</p>
           <button class="btn" style="background:var(--neon-gold); color:#0f172a; font-size:20px; padding:18px; width:auto;" onclick="ouvrirGrandeRoue()">🎡 Lancer la Grande Roue !</button>
-        </div>
-
-        <h3 style="color:var(--neon-gold);">🎯 Quêtes du Jour</h3>
-        <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
-          <span style="font-size:16px;">🍕 Cliquer 50 fois sur la Pizza</span>
-          <span style="color:var(--neon-gold); font-weight:bold; font-size:16px;">+20 Points OMNI ⭐</span>
         </div>
       </section>
     </main>
@@ -470,14 +524,13 @@
   <div id="sticky-audio-bar">
     <div style="display:flex; justify-content:space-between; align-items:center;">
       <span style="color:var(--neon-blue); font-size:13px; font-weight:bold;">📻 Cyber Radio Station</span>
-      <button class="music-btn" onclick="alert('Radio Cyber active et synchronisée !')">▶️ Play Radio</button>
+      <button class="music-btn" onclick="alert('Radio Cyber active !')">▶️ Play Radio</button>
     </div>
   </div>
 
   <script>
     const state = {
-      username: "Joueur Cyber",
-      userAvatar: "🤖",
+      username: "Joueur Cyber", userAvatar: "🤖",
       pizzas: 0, clickPower: 1, pizzasPerSec: 0, omniPoints: 100,
       activeSkin: '🍕', unlockedSkins: ['🍕'],
       activeEffect: 'cyan', unlockedEffects: ['cyan'],
@@ -492,14 +545,36 @@
       localStorage.setItem("omni_app_full_save", JSON.stringify(state));
     }
     function reinitialiserTout() {
-      if (confirm("⚠️ Es-tu sûr de vouloir supprimer toute ta progression et réinitialiser l'application ?")) {
+      if (confirm("⚠️ Es-tu sûr de vouloir supprimer toute ta progression ?")) {
         localStorage.clear();
         window.location.reload(true);
       }
     }
 
+    // AUDIO DEVERROUILLE AUTOMATIQUEMENT
+    let audioCtx = null;
+    function initAudio() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    window.addEventListener("click", initAudio, { once: true });
+    window.addEventListener("touchstart", initAudio, { once: true });
+
+    function jouerNote(freq, duration = 0.08, vol = 0.1) {
+      if (!audioCtx) initAudio();
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + duration);
+      } catch(e){}
+    }
+
+    // MATRIX & RAVE
     let matrixCanvas, matrixCtx, matrixInterval;
-    const matrixChars = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    const matrixChars = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     let matrixDrops = [];
 
     function initMatrixEngine() {
@@ -548,21 +623,7 @@
     function toggleRaveMode() {
       state.raveMode = !state.raveMode;
       document.body.classList.toggle("rave-active", state.raveMode);
-      const btn = document.getElementById("rave-btn");
-      if (btn) btn.innerText = state.raveMode ? "🟢 Mode Rave : ON" : "🔴 Mode Rave : OFF";
-      if (state.raveMode) {
-        const emojis = ["🎉", "⚡", "🍕", "🔥", "💎", "🌌"];
-        raveEmojiInterval = setInterval(() => {
-          const em = document.createElement("div");
-          em.className = "rave-emoji";
-          em.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-          em.style.left = Math.random() * 95 + "vw";
-          document.getElementById("rave-emoji-container").appendChild(em);
-          setTimeout(() => em.remove(), 2500);
-        }, 150);
-      } else {
-        clearInterval(raveEmojiInterval);
-      }
+      document.getElementById("rave-btn").innerText = state.raveMode ? "🟢 Mode Rave : ON" : "🔴 Mode Rave : OFF";
     }
     function toggleCRTMode() {
       state.crtMode = !state.crtMode;
@@ -580,14 +641,15 @@
       sauvegarderDonnees();
     }
 
+    // CLICKER & BOUTIQUE
     function cliquerPizza(e) {
       state.pizzas += state.clickPower;
       rafraichirAffichagePizza();
       sauvegarderDonnees();
+      jouerNote(400, 0.05, 0.05);
 
       const pizzaEl = document.getElementById("pizza-gigante");
-      const container = document.getElementById("pizza-container");
-      if (pizzaEl && container) {
+      if (pizzaEl) {
         pizzaEl.classList.add("clicked");
         setTimeout(() => pizzaEl.classList.remove("clicked"), 80);
       }
@@ -629,6 +691,32 @@
       }
     }
 
+    // CARTES RARES (BOOSTER)
+    function ouvrirBooster() {
+      document.getElementById("booster-container").style.display = "none";
+      document.getElementById("cards-selection-container").style.display = "block";
+      jouerNote(600, 0.2, 0.1);
+    }
+    const cardsList = [
+      "🐉 Dragon Cybernétique (Légendaire)",
+      "🍕 Pizza Quantique d'Or (Mythique)",
+      "⚡ Matrix Hacker (Rare)",
+      "🛸 Soucoupe Volante Néon (Épique)"
+    ];
+    function revelerCarte(id) {
+      const card = cardsList[Math.floor(Math.random() * cardsList.length)];
+      document.getElementById("cards-selection-container").style.display = "none";
+      document.getElementById("card-result").style.display = "block";
+      document.getElementById("card-result-name").innerText = "🎉 Tu as obtenu : " + card;
+      jouerNote(800, 0.3, 0.2);
+    }
+    function reinitialiserBooster() {
+      document.getElementById("booster-container").style.display = "block";
+      document.getElementById("cards-selection-container").style.display = "none";
+      document.getElementById("card-result").style.display = "none";
+    }
+
+    // SIMON SAYS
     let simonSeq = [], simonUserStep = 0, simonPlaying = false;
     function demarrerSimonGame() {
       simonSeq = [Math.floor(Math.random() * 4)];
@@ -671,6 +759,7 @@
       }
     }
 
+    // ROBOT IA
     function envoyerMessageIA() {
       const input = document.getElementById("ai-user-input");
       const text = input.value.trim();
@@ -685,22 +774,13 @@
       setTimeout(() => {
         const aiMsg = document.createElement("div");
         aiMsg.style.cssText = "background:#1e293b; padding:8px 12px; border-radius:8px; align-self:flex-start; max-width:80%; font-size:13px;";
-        aiMsg.innerHTML = `🤖 <strong>Cyber-Bot :</strong> J'ai bien analysé "${text}". Continue d'explorer l'OmniApp !`;
+        aiMsg.innerHTML = `🤖 <strong>Cyber-Bot :</strong> J'ai bien analysé "${text}". Tu gères !`;
         chatBox.appendChild(aiMsg);
         chatBox.scrollTop = chatBox.scrollHeight;
       }, 500);
     }
 
-    const aiSubjects = ["L'intelligence artificielle", "La matrice néon", "Le réseau quantique", "La pizza sacrée"];
-    const aiVerbs = ["illumine", "transcende", "recalibre", "harmonise"];
-    const aiContexts = ["les réalités virtuelles.", "le futur du Cyber-Espace.", "les possibilités de l'OmniApp."];
-    function genererCitationIA() {
-      const sub = aiSubjects[Math.floor(Math.random() * aiSubjects.length)];
-      const verb = aiVerbs[Math.floor(Math.random() * aiVerbs.length)];
-      const ctx = aiContexts[Math.floor(Math.random() * aiContexts.length)];
-      document.getElementById("citation-display").innerText = `« ${sub} ${verb} ${ctx} »`;
-    }
-
+    // PAPIER BULLE & PIXEL ART
     let isSwipingBubble = false;
     function initPapierBulle() {
       const container = document.getElementById("bubble-wrap-container");
@@ -712,6 +792,7 @@
         const pop = () => {
           if (!bubble.classList.contains("popped")) {
             bubble.classList.add("popped");
+            jouerNote(300, 0.04, 0.1);
           }
         };
         bubble.onmouseover = () => { if (isSwipingBubble) pop(); };
@@ -721,6 +802,7 @@
           const elem = document.elementFromPoint(touch.clientX, touch.clientY);
           if (elem && elem.classList.contains("bubble-item")) {
             elem.classList.add("popped");
+            jouerNote(300, 0.04, 0.1);
           }
         };
         container.appendChild(bubble);
@@ -762,6 +844,7 @@
       }
     }
 
+    // GRAFFITI & CHAT
     let gCanvas, gCtx, isDrawing = false;
     function initGraffiti() {
       gCanvas = document.getElementById("graffiti-canvas");
@@ -803,15 +886,15 @@
     }
     function voterHumeur(humeur) { alert(`Humeur enregistrée : ${humeur} !`); }
 
-    const aiPrefixes = ["Néon", "Cyber", "Vortex", "Quantum", "Shadow", "Hyper", "Alpha", "Omega"];
-    const aiSuffixes = ["Phénix", "Rider", "Hacker", "Viper", "Titan", "Spectre", "Pizzaiolo", "Runner"];
-    const aiTitles = ["👑", "⚡", "🔥", "🛸", "🤖", "🌌"];
-    function genererPseudoIA() {
-      const pre = aiPrefixes[Math.floor(Math.random() * aiPrefixes.length)];
-      const suf = aiSuffixes[Math.floor(Math.random() * aiSuffixes.length)];
-      const title = aiTitles[Math.floor(Math.random() * aiTitles.length)];
-      const num = Math.floor(Math.random() * 999) + 1;
-      document.getElementById("pseudo-generated").innerText = `${title} ${pre}_${suf}_${num}`;
+    // CITATIONS & DILEMMES
+    const aiSubjects = ["L'intelligence artificielle", "La matrice néon", "Le réseau quantique", "La pizza sacrée"];
+    const aiVerbs = ["illumine", "transcende", "recalibre", "harmonise"];
+    const aiContexts = ["les réalités virtuelles.", "le futur du Cyber-Espace.", "les possibilités de l'OmniApp."];
+    function genererCitationIA() {
+      const sub = aiSubjects[Math.floor(Math.random() * aiSubjects.length)];
+      const verb = aiVerbs[Math.floor(Math.random() * aiVerbs.length)];
+      const ctx = aiContexts[Math.floor(Math.random() * aiContexts.length)];
+      document.getElementById("citation-display").innerText = `« ${sub} ${verb} ${ctx} »`;
     }
 
     const dilemmesIADatabase = [
@@ -841,6 +924,7 @@
       chargerDilemmeIA();
     }
 
+    // CAPSULES & SECRETS
     function creerCapsule() {
       const txt = document.getElementById("capsule-text").value.trim();
       if (!txt) return;
@@ -896,6 +980,7 @@
       }, 800);
     }
 
+    // BOUTIQUE COSMÉTIQUE
     const SKINS_LIST = [
       { id: '🍕', name: 'Pizza Classique', cost: 0 },
       { id: '👑', name: 'Pizza Royale', cost: 50 },
@@ -905,7 +990,6 @@
       { id: 'cyan', name: 'Étincelles Cyan', cost: 0 },
       { id: 'fire', name: 'Flammes 🔥', cost: 40 }
     ];
-
     function genererBoutiqueCosmetique() {
       const grid = document.getElementById("pizza-skins-grid");
       if(grid) {
@@ -913,32 +997,16 @@
           const owned = state.unlockedSkins.includes(s.id);
           return `<div class="cosmetic-card ${owned ? 'owned' : ''}">
             <span style="font-size:45px;">${s.id}</span>
-            <h4 style="margin:10px 0 5px 0; font-size:15px;">${s.name}</h4>
+            <h4 style="margin:10px 0 5px 0;">${s.name}</h4>
             <p style="color:var(--neon-gold); font-size:13px; margin:0 0 10px 0;">${s.cost} ⭐</p>
             ${owned ? 
-              `<button class="music-btn" onclick="equiperSkin('${s.id}')">${state.activeSkin === s.id ? 'Equipé ✅' : 'Équiper'}</button>` :
+              `<button class="music-btn" onclick="equiperSkin('${s.id}')">${state.activeSkin === s.id ? 'Équipé ✅' : 'Équiper'}</button>` :
               `<button class="btn" style="padding:6px; font-size:13px;" onclick="acheterSkin('${s.id}',${s.cost})">Acheter</button>`
             }
           </div>`;
         }).join("");
       }
-
-      const gridEff = document.getElementById("click-effects-grid");
-      if(gridEff) {
-        gridEff.innerHTML = EFFECTS_LIST.map(e => {
-          const owned = state.unlockedEffects.includes(e.id);
-          return `<div class="cosmetic-card ${owned ? 'owned' : ''}">
-            <h4 style="margin:10px 0 5px 0; font-size:15px;">${e.name}</h4>
-            <p style="color:var(--neon-gold); font-size:13px; margin:0 0 10px 0;">${e.cost} ⭐</p>
-            ${owned ? 
-              `<button class="music-btn" onclick="state.activeEffect='${e.id}'; sauvegarderDonnees(); alert('Effet équipé !');">Équipé ✅</button>` :
-              `<button class="btn" style="padding:6px; font-size:13px;" onclick="if(state.omniPoints>=${e.cost}){state.omniPoints-=${e.cost};state.unlockedEffects.push('${e.id}');sauvegarderDonnees();genererBoutiqueCosmetique();rafraichirAffichagePizza();}else{alert('Pas assez de points !');}">Acheter</button>`
-            }
-          </div>`;
-        }).join("");
-      }
     }
-
     function acheterSkin(id, cost) {
       if (state.omniPoints >= cost) {
         state.omniPoints -= cost;
@@ -949,7 +1017,6 @@
         sauvegarderDonnees();
       } else alert("Points OMNI ⭐ insuffisants !");
     }
-
     function equiperSkin(id) {
       state.activeSkin = id;
       const pizzaEl = document.getElementById("pizza-gigante");
@@ -958,6 +1025,7 @@
       sauvegarderDonnees();
     }
 
+    // ROUE XL
     let wheelCanvas, wheelCtx;
     const rewards = ["+100 ⭐", "Rien... 😢", "+500 🍕", "+10 ⭐", "✨ LÉGENDAIRE", "Rien !"];
     function ouvrirGrandeRoue() {
@@ -1004,7 +1072,7 @@
         state.omniPoints += 50;
         rafraichirAffichagePizza();
         sauvegarderDonnees();
-        alert("🎉 Bravo ! Tu as remporté +50 Points OMNI ⭐ de la Grande Roue !");
+        alert("🎉 Bravo ! Tu as remporté +50 Points OMNI ⭐ !");
         fermerGrandeRoue();
       }, 4000);
     }
